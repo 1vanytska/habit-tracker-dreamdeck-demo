@@ -1,8 +1,6 @@
 # Habit Tracker - DreamDeck
 
-Ця веб-аплікація дозволяє створювати цілі та плани, додавати різні елементи дизайну, такі як зображення, терміни виконання, описи, нотатки, маркери звичок тощо. Це програма для організації життя та структурування думок або планів.
+The web application makes it possible to create goals and plans, add various designs to them, such as images, deadlines, descriptions, notes, habit marks, etc. It is a program for organizing life and arranging thoughts or plans.
 
-## Документація
-- [Функціональні вимоги, шаблон архітектури, операції з зовнішніми системами та REST APIs](https://docs.google.com/spreadsheets/d/1QtglGAyHDQxiJTzAJqrcSQE1Cno50NpG/edit?usp=sharing&ouid=115530587534022955781&rtpof=true&sd=true)
-
-
+## Documentation
+- [Functional requirements, Architecture template, Architecture template: External system operations and Architecture template REST APIs](https://docs.google.com/spreadsheets/d/1QtglGAyHDQxiJTzAJqrcSQE1Cno50NpG/edit?usp=sharing&ouid=115530587534022955781&rtpof=true&sd=true)
