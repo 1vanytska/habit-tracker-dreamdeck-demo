@@ -1,3 +1,4 @@
+# Project Title
 # Habit Tracker - DreamDeck
 
 ## Description
@@ -6,8 +7,6 @@ The web application makes it possible to create goals and plans, add various des
 
 ## Documentation
 - [Functional requirements, Architecture template, Architecture template: External system operations and Architecture template REST APIs](https://docs.google.com/spreadsheets/d/1QtglGAyHDQxiJTzAJqrcSQE1Cno50NpG/edit?usp=sharing&ouid=115530587534022955781&rtpof=true&sd=true)
-
-# Project Title
 
 ## Getting Started
 
