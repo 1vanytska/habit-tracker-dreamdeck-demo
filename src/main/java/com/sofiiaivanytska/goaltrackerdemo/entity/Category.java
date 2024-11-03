@@ -1,39 +1,23 @@
-package com.sofiiaivanytska.goaltrackerdemo.entity;
-
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-
-@Entity
-public class Category {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    private int categoryId;
-
-    private String name;
-
-    public Category() {}
-
-    public Category(int categoryId, String name) {
-        this.categoryId = categoryId;
-        this.name = name;
-    }
-
-    public int getCategoryId() {
-        return categoryId;
-    }
-
-    public void setCategoryId(int categoryId) {
-        this.categoryId = categoryId;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-}
+//package com.sofiiaivanytska.goaltrackerdemo.entity;
+//
+//import jakarta.persistence.*;
+//import lombok.Data;
+//
+//import java.util.List;
+//
+//@Data
+//@Entity
+//@Table(name = "Category")
+//public class Category {
+//
+//    @Id
+//    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+//    @Column(name = "category_id", nullable = false)
+//    private int categoryId;
+//
+//    @Column(nullable = false)
+//    private String name;
+//
+//    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, orphanRemoval = true)
+//    private List<Goal> goals;
+//}
