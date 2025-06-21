@@ -1,5 +1,10 @@
 server:
   port: 8081
+app:
+  jwt:
+    secret: VGhpcy1pcw1hLXZlcnktc2VjdXJlLXNlY3JldC1rZXktZm9yLWp3dA==
+    expiration: 3600000
+    refresh-expiration: 86400000
 spring:
 #  security:
 #    oauth2:

@@ -1,6 +1,8 @@
 package com.htdd.habittrackerdreamdeckdemo.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -10,15 +12,18 @@ import java.util.UUID;
 @Data
 @Entity
 @NoArgsConstructor
-@Table(name = "Goal")
+@Table(name = "goal")
 public class Goal {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "goal_id")
     private UUID goalId;
 
-    @Column(nullable = false)
+    @NotNull
+    @Column(name = "user_id", nullable = false)
     private UUID userId;
 
+    @NotBlank
     @Column(nullable = false)
     private String title;
 
@@ -26,20 +31,28 @@ public class Goal {
 
     private String description;
 
+    @NotNull
+    @Column(name = "category_id") // nullable = false
     private UUID categoryId;
 
-    @Column(nullable = false)
+    @NotNull
+    @Column(name = "is_public", nullable = false)
     private boolean isPublic;
 
+    @NotNull
     @Column(nullable = false)
     private LocalDate deadline;
 
+    @NotBlank
     @Column(nullable = false)
     private String status;
 
-    @Column(nullable = false)
+    @NotNull
+    @Column(name = "is_archived", nullable = false)
     private boolean isArchived;
 
+    @NotNull
+    @Column(name = "archivation_time")
     private LocalDate archivationTime;
 
     public Goal(UUID userId, String title, String picture, String description,
