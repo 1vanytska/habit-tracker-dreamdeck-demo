@@ -12,6 +12,7 @@ import java.util.UUID;
 @Service
 @AllArgsConstructor
 public class GoalService {
+
     private final GoalRepository goalRepository;
 
     public List<Goal> getAllGoals() {

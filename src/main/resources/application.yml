@@ -6,14 +6,13 @@ app:
     expiration: 3600000
     refresh-expiration: 86400000
 spring:
-#  security:
-#    oauth2:
-#      client:
-#        registration:
-#          google:
-#            google:
-          #  client_id: ${GOOGLE_CLIENT_ID}
-          #  client_secret: ${GOOGLE_CLIENT_SECRET}
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client_id: 590896151176-pkp3v9u7fpssunedfro20vs7nc2r3r3l.apps.googleusercontent.com
+            client_secret: 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
   application:
     name: habit-tracker-dreamdeck-demo
   freemarker:
