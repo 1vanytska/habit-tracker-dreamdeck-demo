@@ -1,0 +1,85 @@
+.menu {
+  border: 2px solid #ccc;
+  padding: 1rem;
+  background-color: #fdfdfd;
+  width: 250px;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.avatar {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  margin-right: 0.75rem;
+  border: 2px solid #aaa;
+}
+
+.details {
+  display: flex;
+  flex-direction: column;
+}
+
+.username {
+  margin: 0;
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+.xp {
+  margin: 0;
+  font-size: 0.9rem;
+  color: #555;
+}
+
+.badge {
+  font-size: 0.85rem;
+  color: #2e8b57;
+}
+
+.nav-links {
+  list-style: none;
+  padding: 0;
+}
+
+.nav-links li {
+  margin: 0.5rem 0;
+}
+
+.nav-links a {
+  text-decoration: none;
+  color: #333;
+  font-weight: 500;
+}
+
+.workout-info {
+  margin-bottom: 0.5rem;
+  font-size: 1rem;
+}
+
+.schedule {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.schedule span {
+  padding: 0.3rem 0.6rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background-color: #fff;
+  font-size: 0.85rem;
+}
+
+.schedule .active {
+  background-color: #2e8b57;
+  color: white;
+  font-weight: bold;
+}

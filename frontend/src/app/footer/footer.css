@@ -1,0 +1,12 @@
+.footer {
+  border-top: 2px solid #ccc;
+  padding: 1rem;
+  background-color: #f7f7f7;
+  text-align: center;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.footer-note {
+  font-size: 0.8rem;
+  color: #888;
+}
