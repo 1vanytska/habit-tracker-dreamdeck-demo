@@ -1,12 +1,24 @@
+:host {
+  display: block;
+  width: 100%;
+}
+
 .footer {
-  border-top: 2px solid #ccc;
-  padding: 1rem;
-  background-color: #f7f7f7;
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  background-color: #8fc2d5;
+  padding: 24px 0;
   text-align: center;
-  font-family: 'Segoe UI', sans-serif;
+  box-shadow: 0 -1px 4px rgba(0, 0, 0, 0.1);
+  z-index: 100;
 }
 
 .footer-note {
-  font-size: 0.8rem;
-  color: #888;
+  font-size: 20px;
+  color: white;
+  margin: 0;
+  line-height: 1.4;
+  font-family: "Balsamiq Sans", sans-serif;
 }

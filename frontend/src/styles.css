@@ -4,13 +4,15 @@ html, body {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  height: 100%;
   font-family: 'Balsamiq Sans', sans-serif;
   background-color: rgb(207, 240, 255);
 }
 
 app-root {
-  display: block;
-  width: 100%;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
 }
 
 .balsamiq-sans-regular {
