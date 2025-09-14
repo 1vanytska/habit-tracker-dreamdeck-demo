@@ -1,10 +1,8 @@
-/* app-menu.component.css */
 :host {
   display: block;
   margin: 2rem 0;
 }
 
-/* Центруємо всі елементи зверху вниз */
 .menu-panel {
   background-color: #8fc2d5;
   border-radius: 20px;
@@ -17,7 +15,6 @@
   align-items: center;
 }
 
-/* Аватарка над ніком */
 .user-info {
   display: flex;
   flex-direction: column;
@@ -40,8 +37,8 @@
 }
 
 .user-description {
-  font-size: 0.85rem;       /* трохи менше за нікнейм */
-  color: #e0f4ff;           /* світлий відтінок для контрасту */
+  font-size: 0.85rem;
+  color: #e0f4ff;
   text-align: center;
   margin-top: 0.25rem;
   margin-bottom: 0.5rem;
@@ -57,7 +54,6 @@
   border-radius: 2px;
 }
 
-/* Пункти меню під ніком */
 .menu-list {
   list-style: none;
   padding: 0;

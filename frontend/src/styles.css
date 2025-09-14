@@ -1,15 +1,15 @@
 @import url('https://fonts.googleapis.com/css2?family=Balsamiq+Sans:ital,wght@0,400;0,700;1,400;1,700&display=swap');
 
 :root {
-  --gutter: 1.5rem;       /* 24px — відступи з боків */
-  --max-width: 75rem;     /* ≈1200px — максимальна ширина всього блоку */
-  --sidebar-width: 15rem; /* ≈240px — ширина меню */
+  --gutter: 1.5rem;
+  --max-width: 75rem;
+  --sidebar-width: 15rem;
 }
 
 .container {
   max-width: var(--max-width);
-  margin: 0 auto;         /* центр по горизонталі */
-  padding: var(--gutter); /* відступи з усіх боків */
+  margin: 0 auto;
+  padding: var(--gutter);
   box-sizing: border-box;
 }
 
