@@ -1,3 +1,26 @@
-.content {
-  flex: 1;
+.page-wrapper {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh; /* займає весь в’юпорт */
+}
+
+.container.layout {
+  flex: 1; /* розтягується, щоб футер був внизу */
+}
+
+.layout {
+  display: flex;
+  width: 100%;
+  gap: var(--gutter);     /* простір між меню та контентом */
+}
+
+/* Фіксована ліва колонка */
+.sidenav {
+  flex: 0 0 var(--sidebar-width);
+}
+
+/* Адаптивна права колонка */
+.main-content {
+  flex: 1 1 auto;
+  overflow: auto;         /* прокрутка, якщо контент великий */
 }
