@@ -4,7 +4,7 @@
 }
 
 header {
-  background-color: #8fc2d5;
+  background-color: var(--main-color);
   padding: 16px 0;
 }
 

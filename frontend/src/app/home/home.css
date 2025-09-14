@@ -14,7 +14,7 @@
 .search-input {
   flex: 1;
   padding: 0.5rem 0.75rem;
-  border: 1px solid #ccc;
+  border: 1px solid var(--main-color);
   border-radius: 4px;
   font-size: 1rem;
   box-sizing: border-box;
@@ -34,7 +34,7 @@
 }
 
 .add-btn {
-  background-color: #8fc2d5;
+  background-color: var(--main-color);
   font-weight: bold;
   width: 2.5rem;
   height: 2.5rem;
@@ -57,7 +57,7 @@
   border: 1px solid #ccc;
   border-radius: 12px;
   overflow: hidden;
-  background-color: #8fc2d5;
+  background-color: var(--main-color);
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
 }
 
