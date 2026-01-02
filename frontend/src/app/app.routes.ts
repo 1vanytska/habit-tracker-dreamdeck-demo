@@ -5,6 +5,6 @@ import { EditGoal } from './edit-goal/edit-goal';
 
 export const routes: Routes = [
     { path: 'home', component: Home},
-    { path: 'goal/:id', component: Goal},
+    { path: 'goal', component: Goal},
     { path: 'edit-goal/:id', component: EditGoal}
 ];

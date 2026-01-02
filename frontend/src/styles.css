@@ -3,8 +3,9 @@
 :root {
   --gutter: 1.5rem;
   --max-width: 75rem;
-  --sidebar-width: 15rem;
+  --sidebar-width: 17.5rem;
   --main-color: #8fc2d5;
+  color: #147ba0;
 }
 
 .container {

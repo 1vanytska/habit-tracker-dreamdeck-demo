@@ -12,6 +12,7 @@
   display: flex;
   width: 100%;
   gap: var(--gutter);
+  align-items: flex-start;
 }
 
 .sidenav {

@@ -1,1 +1,178 @@
-<p>goal works!</p>
+<div class="goal-detail-container">
+  <div class="goal-header">
+    <div class="goal-text">
+      <h1 class="goal-name">Назва цілі</h1>
+      <p class="goal-description">
+        Підтримувати щоденну активність та тренуватися не менше 4 рази на тиждень
+      </p>
+
+      <div class="goal-dates">
+        <div class="date-item">
+          <label>Дата початку</label>
+          <span>01.09.2025</span>
+        </div>
+        <div class="date-item">
+          <label>Залишилось</label>
+          <span>15 днів</span>
+        </div>
+        <div class="date-item">
+          <label>Дедлайн</label>
+          <span>16.09.2025</span>
+        </div>
+      </div>
+
+      <div class="goal-meta">
+        <div class="goal-category-badge">Здоров’я</div>
+        <button class="btn edit-goal-btn">Редагувати</button>
+      </div>
+    </div>
+
+    <div class="goal-image">
+      <img src="assets/goal-placeholder.jpg" alt="Зображення цілі" />
+    </div>
+  </div>
+
+  <div class="goal-progress-bar">
+    <div class="progress-fill" style="width: 60%;"></div>
+    <span class="progress-label">60%</span>
+  </div>
+
+  <div class="steps-section">
+    <div class="section-header">
+      <h2>Steps</h2>
+      <button class="btn add-step-btn">+</button>
+    </div>
+    <ul class="steps-list">
+      <li><input type="checkbox" /> Зареєструвати тренувальний план</li>
+      <li><input type="checkbox" /> Пройти перше тренування</li>
+      <li><input type="checkbox" /> Відстежити прогрес у додатку</li>
+    </ul>
+  </div>
+
+  <hr class="section-divider" />
+
+  <div class="bottom-section">
+
+    <div class="calendar-section">
+      <div class="calendar-header">
+        <button class="cal-nav-btn" (click)="changeMonth(-1)">&#10094;</button>
+        <h3 class="current-month">{{ currentMonthName }}</h3>
+        <button class="cal-nav-btn" (click)="changeMonth(1)">&#10095;</button>
+      </div>
+
+      <div class="calendar-grid">
+        <div class="day-name">Пн</div>
+        <div class="day-name">Вт</div>
+        <div class="day-name">Ср</div>
+        <div class="day-name">Чт</div>
+        <div class="day-name">Пт</div>
+        <div class="day-name">Сб</div>
+        <div class="day-name">Нд</div>
+
+        @for (day of calendarDays; track $index) {
+        @if (day.dayNumber) {
+        <div class="day-cell" [class.active-day]="day.isToday">
+          {{ day.dayNumber }}
+        </div>
+        } @else {
+        <div class="day-cell empty"></div>
+        }
+        }
+      </div>
+    </div>
+
+    <div class="notes-section">
+      <div class="section-header">
+        <h2>Notes</h2>
+        <button class="btn add-note-btn">+</button>
+      </div>
+
+      <ul class="notes-skeleton-list">
+
+        <li class="notes-skeleton">
+          <div class="lines-wrapper">
+            <div class="s-line"></div>
+            <div class="s-line"></div>
+            <div class="s-line"></div>
+            <div class="s-line"></div>
+            <div class="s-line s-highlight" style="width: 70%"></div>
+            <div class="s-line"></div>
+          </div>
+          <div class="note-popup">
+            Не забути купити нові кросівки до п'ятниці 👟
+          </div>
+        </li>
+
+        <li class="notes-skeleton">
+          <div class="lines-wrapper">
+            <div class="s-line"></div>
+            <div class="s-line"></div>
+            <div class="s-line"></div>
+            <div class="s-line"></div>
+            <div class="s-line"></div>
+            <div class="s-line"></div>
+          </div>
+          <div class="note-popup">
+            Записатися до лікаря на чекап 🩺
+          </div>
+        </li>
+
+        <li class="notes-skeleton">
+          <div class="lines-wrapper">
+            <div class="s-line"></div>
+            <div class="s-line s-highlight" style="width: 50%"></div>
+            <div class="s-line"></div>
+            <div class="s-line"></div>
+            <div class="s-line"></div>
+            <div class="s-line"></div>
+          </div>
+          <div class="note-popup">
+            Подзвонити тренеру о 18:00 📞
+          </div>
+        </li>
+
+        <li class="notes-skeleton">
+          <div class="lines-wrapper">
+            <div class="s-line"></div>
+            <div class="s-line"></div>
+            <div class="s-line"></div>
+            <div class="s-line" style="width: 80%"></div>
+            <div class="s-line"></div>
+            <div class="s-line"></div>
+          </div>
+          <div class="note-popup">
+            Переглянути відео по Angular Components 💻
+          </div>
+        </li>
+
+        <li class="notes-skeleton">
+          <div class="lines-wrapper">
+            <div class="s-line"></div>
+            <div class="s-line s-highlight"></div>
+            <div class="s-line"></div>
+            <div class="s-line"></div>
+            <div class="s-line"></div>
+            <div class="s-line"></div>
+          </div>
+          <div class="note-popup">
+            Купити протеїн та вітаміни 💊
+          </div>
+        </li>
+
+        <li class="notes-skeleton">
+          <div class="lines-wrapper">
+            <div class="s-line"></div>
+            <div class="s-line"></div>
+            <div class="s-line"></div>
+            <div class="s-line"></div>
+            <div class="s-line" style="width: 60%"></div>
+            <div class="s-line"></div>
+          </div>
+          <div class="note-popup">
+            Зробити розтяжку ввечері 🧘‍♀️
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>

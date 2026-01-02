@@ -7,9 +7,8 @@
   background-color: var(--main-color);
   border-radius: 20px;
   padding: 1rem;
-  width: 18rem;
+  width: 17rem;
   box-sizing: border-box;
-
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -26,6 +25,7 @@
   width: 64px;
   height: 64px;
   border-radius: 50%;
+  border: 2px solid white;
   object-fit: cover;
   margin-bottom: 0.5rem;
 }
