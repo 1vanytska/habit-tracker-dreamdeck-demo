@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
 
-@CrossOrigin(origins="http://localhost:4200")
 @RestController
 @RequestMapping("/api/goals")
 @RequiredArgsConstructor
@@ -42,7 +41,6 @@ public class GoalController {
     @PreAuthorize("hasRole('USER')")
     public ResponseEntity<?> deleteGoal(@PathVariable UUID id) {
         goalService.deleteGoalById(id);
-//        return ResponseEntity.ok("Goal deleted successfully");
         return ResponseEntity.noContent().build();
     }
 }

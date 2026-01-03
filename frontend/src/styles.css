@@ -5,6 +5,14 @@
   --max-width: 75rem;
   --sidebar-width: 17.5rem;
   --main-color: #8fc2d5;
+
+  --main-bg-color: #cff0ff;
+  --primary-blue: #147ba0;
+  --secondary-blue: #8fc2d5;
+  --text-dark: #333333;
+  --input-border: #aed9e9;
+  --white: #ffffff;
+  --danger-color: #d9534f;
   color: #147ba0;
 }
 

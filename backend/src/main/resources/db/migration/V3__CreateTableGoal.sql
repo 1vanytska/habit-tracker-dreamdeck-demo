@@ -1,14 +1,17 @@
-CREATE TABLE IF NOT EXISTS public."Goal"
+CREATE TABLE IF NOT EXISTS goal
 (
-    goal_id serial PRIMARY KEY,
-    user_id integer NOT NULL REFERENCES public."User" (user_id),
-    title text NOT NULL,
-    picture text,
-    description text,
-    category_id integer NOT NULL REFERENCES public."Category" (category_id),
-    is_public boolean NOT NULL,
-    deadline date NOT NULL,
-    status text NOT NULL,
-    is_archived boolean NOT NULL,
-    archivation_time timestamp with time zone
-);
+    goal_id UUID PRIMARY KEY,
+    user_id UUID NOT NULL,
+    title TEXT NOT NULL,
+    picture TEXT,
+    description TEXT,
+    category_id UUID NOT NULL,
+    is_public BOOLEAN NOT NULL,
+    deadline DATE NOT NULL,
+    status TEXT NOT NULL,
+    is_archived BOOLEAN NOT NULL,
+    archiving_time DATE,
+
+    CONSTRAINT fk_goal_user FOREIGN KEY (user_id) REFERENCES app_user (id),
+    CONSTRAINT fk_goal_category FOREIGN KEY (category_id) REFERENCES category (id)
+    );

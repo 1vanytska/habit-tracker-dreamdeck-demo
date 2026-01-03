@@ -1,64 +1,57 @@
--- Create the Comment table
-CREATE TABLE IF NOT EXISTS public."Comment"
+CREATE TABLE IF NOT EXISTS comment
 (
-    comment_id serial PRIMARY KEY,
-    goal_id integer NOT NULL REFERENCES public."Goal" (goal_id),
-    user_id integer NOT NULL REFERENCES public."User" (user_id),
-    content text NOT NULL,
-    date timestamp with time zone NOT NULL
-);
+    comment_id UUID PRIMARY KEY,
+    goal_id UUID NOT NULL REFERENCES goal (goal_id),
+    user_id UUID NOT NULL REFERENCES app_user (id),
+    content TEXT NOT NULL,
+    date TIMESTAMP WITH TIME ZONE NOT NULL
+                       );
 
--- Create the Friendship table
-CREATE TABLE IF NOT EXISTS public."Friendship"
+CREATE TABLE IF NOT EXISTS friendship
 (
-    friendship_id serial PRIMARY KEY,
-    user_id integer NOT NULL REFERENCES public."User" (user_id),
-    friend_id integer NOT NULL REFERENCES public."User" (user_id),
-    status text NOT NULL
-);
+    friendship_id UUID PRIMARY KEY,
+    user_id UUID NOT NULL REFERENCES app_user (id),
+    friend_id UUID NOT NULL REFERENCES app_user (id),
+    status TEXT NOT NULL
+    );
 
--- Create the Complaint table
-CREATE TABLE IF NOT EXISTS public."Complaint"
+CREATE TABLE IF NOT EXISTS complaint
 (
-    complaint_id serial PRIMARY KEY,
-    complainant_id integer NOT NULL REFERENCES public."User" (user_id),
-    reported_user_id integer NOT NULL REFERENCES public."User" (user_id),
-    description text NOT NULL,
-    status text NOT NULL,
-    date timestamp with time zone NOT NULL
-);
+    complaint_id UUID PRIMARY KEY,
+    complainant_id UUID NOT NULL REFERENCES app_user (id),
+    reported_user_id UUID NOT NULL REFERENCES app_user (id),
+    description TEXT NOT NULL,
+    status TEXT NOT NULL,
+    date TIMESTAMP WITH TIME ZONE NOT NULL
+                       );
 
--- Create the GoalNote table
-CREATE TABLE IF NOT EXISTS public."GoalNote"
+CREATE TABLE IF NOT EXISTS goal_note
 (
-    note_id serial PRIMARY KEY,
-    goal_id integer NOT NULL REFERENCES public."Goal" (goal_id),
-    date timestamp with time zone NOT NULL,
-                       content text NOT NULL
-);
+    note_id UUID PRIMARY KEY,
+    goal_id UUID NOT NULL REFERENCES goal (goal_id),
+    date TIMESTAMP WITH TIME ZONE NOT NULL,
+                       content TEXT NOT NULL
+                       );
 
--- Create the GoalStep table
-CREATE TABLE IF NOT EXISTS public."GoalStep"
+CREATE TABLE IF NOT EXISTS goal_step
 (
-    step_id serial PRIMARY KEY,
-    goal_id integer NOT NULL REFERENCES public."Goal" (goal_id),
-    description text NOT NULL,
-    is_done boolean NOT NULL,
-    completion_date timestamp
-);
+    step_id UUID PRIMARY KEY,
+    goal_id UUID NOT NULL REFERENCES goal (goal_id),
+    description TEXT NOT NULL,
+    is_done BOOLEAN NOT NULL,
+    completion_date TIMESTAMP
+    );
 
--- Create the Like table
-CREATE TABLE IF NOT EXISTS public."Like"
+CREATE TABLE IF NOT EXISTS user_likes
 (
-    user_id integer NOT NULL REFERENCES public."User" (user_id),
-    goal_id integer NOT NULL REFERENCES public."Goal" (goal_id),
+    user_id UUID NOT NULL REFERENCES app_user (id),
+    goal_id UUID NOT NULL REFERENCES goal (goal_id),
     PRIMARY KEY (user_id, goal_id)
-);
+    );
 
--- Create the View table
-CREATE TABLE IF NOT EXISTS public."View"
+CREATE TABLE IF NOT EXISTS goal_view
 (
-    user_id integer NOT NULL REFERENCES public."User" (user_id),
-    goal_id integer NOT NULL REFERENCES public."Goal" (goal_id),
+    user_id UUID NOT NULL REFERENCES app_user (id),
+    goal_id UUID NOT NULL REFERENCES goal (goal_id),
     PRIMARY KEY (user_id, goal_id)
-);
+    );

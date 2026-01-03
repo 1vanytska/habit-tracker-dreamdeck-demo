@@ -1,10 +1,18 @@
 <div class="home-container">
     <div class="search-add">
-        <input type="text" placeholder="Пошук" class="search-input" />
-        <button class="btn search-btn">SEARCH</button>
-        <button class="btn add-btn">+</button>
-    </div>
+        
+        <div class="search-wrapper">
+            <button class="search-icon-btn">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#147ba0" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                </svg>
+            </button>
+            <input type="text" placeholder="Пошук" class="search-input" />
+        </div>
 
+        <button class="btn add-btn" routerLink="/create-goal">+</button>
+    </div>
     <div class="cards-grid">
         <div class="card">
             <img src="path/to/goal1.jpg" alt="Ціль 1" class="card-img" />

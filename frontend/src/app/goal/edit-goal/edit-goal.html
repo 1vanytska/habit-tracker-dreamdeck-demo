@@ -1,0 +1,85 @@
+@if (isLoading) {
+<div style="text-align: center; padding: 50px; color: var(--primary-blue);">
+  <h3>Завантаження...</h3>
+</div>
+} @else {
+<div class="edit-goal-container page-animate">
+
+  <h2 class="page-title">
+    {{ isEditMode ? 'Редагування цілі' : 'Створення нової цілі' }}
+  </h2>
+
+  <form class="edit-form" (ngSubmit)="saveGoal()">
+
+    <div class="image-upload-section">
+      <div class="image-placeholder" (click)="fileInput.click()">
+        <img [src]="currentImageDisplay" alt="Goal placeholder" class="current-image">
+        <div class="upload-overlay">
+          <span>Змінити зображення</span>
+        </div>
+      </div>
+      <input #fileInput type="file" style="display: none" accept="image/*" (change)="onFileSelected($event)">
+    </div>
+
+    <div class="form-group">
+      <label for="goalName" class="form-label">Назва цілі</label>
+      <input type="text" id="goalName" class="form-input" [(ngModel)]="goal.title" name="title"
+        placeholder="Введіть назву цілі" required>
+    </div>
+
+    <div class="form-group">
+      <label for="category" class="form-label">Категорія</label>
+      <select id="category" class="form-input form-select" [(ngModel)]="goal.categoryId" name="categoryId" required>
+
+        <option value="" disabled>Виберіть категорію</option>
+
+        @for (cat of categories; track cat.id) {
+        <option [value]="cat.id">{{ cat.name }}</option>
+        }
+
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="description" class="form-label">Опис цілі</label>
+      <textarea id="description" class="form-input form-textarea" rows="5" [(ngModel)]="goal.description"
+        name="description" placeholder="Введіть опис цілі"></textarea>
+    </div>
+
+    <div class="form-group col" style="flex: 1;">
+        <label for="startDate" class="form-label">Дата початку</label>
+        <input 
+            type="date" 
+            id="startDate" 
+            class="form-input" 
+            [(ngModel)]="goal.startDate" 
+            name="startDate" 
+            required>
+      </div>
+
+      <div class="form-group col" style="flex: 1;">
+        <label for="deadline" class="form-label">Дедлайн</label>
+        <input 
+            type="date" 
+            id="deadline" 
+            class="form-input" 
+            [(ngModel)]="goal.deadline" 
+            name="deadline" 
+            required>
+      </div>
+
+    <div class="actions-container">
+      <button type="submit" class="btn btn-primary save-btn">
+        {{ isEditMode ? 'Зберегти зміни' : 'Створити ціль' }}
+      </button>
+
+      @if (isEditMode) {
+      <button type="button" class="btn btn-secondary archive-btn" (click)="archiveGoal()">
+        Архівувати ціль
+      </button>
+      }
+    </div>
+
+  </form>
+</div>
+}

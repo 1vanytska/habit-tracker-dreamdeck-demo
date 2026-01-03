@@ -27,6 +27,7 @@ public class Goal {
     @Column(nullable = false)
     private String title;
 
+    @Column(columnDefinition = "TEXT")
     private String picture;
 
     private String description;
@@ -38,6 +39,9 @@ public class Goal {
     @NotNull
     @Column(name = "is_public", nullable = false)
     private boolean isPublic;
+
+    @Column(name = "start_date")
+    private LocalDate startDate;
 
     @NotNull
     @Column(nullable = false)
@@ -51,12 +55,11 @@ public class Goal {
     @Column(name = "is_archived", nullable = false)
     private boolean isArchived;
 
-    @NotNull
     @Column(name = "archiving_time")
     private LocalDate archivingTime;
 
     public Goal(UUID userId, String title, String picture, String description,
-                UUID categoryId, boolean isPublic, LocalDate deadline,
+                UUID categoryId, boolean isPublic, LocalDate startDate, LocalDate deadline,
                 String status, boolean isArchived, LocalDate archivingTime) {
         this.userId = userId;
         this.title = title;
@@ -64,6 +67,7 @@ public class Goal {
         this.description = description;
         this.categoryId = categoryId;
         this.isPublic = isPublic;
+        this.startDate = startDate;
         this.deadline = deadline;
         this.status = status;
         this.isArchived = isArchived;
