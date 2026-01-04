@@ -1,65 +1,97 @@
+@if (goal) {
 <div class="goal-detail-container">
   <div class="goal-header">
     <div class="goal-text">
-      <h1 class="goal-name">Назва цілі</h1>
-      <p class="goal-description">
-        Підтримувати щоденну активність та тренуватися не менше 4 рази на тиждень
-      </p>
+      <h1 class="goal-name">{{ goal.title }}</h1>
+      <p class="goal-description">{{ goal.description || 'Опис відсутній' }}</p>
 
       <div class="goal-dates">
         <div class="date-item">
           <label>Дата початку</label>
-          <span>01.09.2025</span>
+          <span>{{ goal.startDate | date:'dd.MM.yyyy' }}</span>
         </div>
         <div class="date-item">
           <label>Залишилось</label>
-          <span>15 днів</span>
+          <span [style.color]="daysLeft < 3 ? 'red' : 'inherit'">{{ daysLeft }} днів</span>
         </div>
         <div class="date-item">
           <label>Дедлайн</label>
-          <span>16.09.2025</span>
+          <span>{{ goal.deadline | date:'dd.MM.yyyy' }}</span>
         </div>
       </div>
 
       <div class="goal-meta">
-        <div class="goal-category-badge">Здоров’я</div>
-        <button class="btn edit-goal-btn">Редагувати</button>
+        <div class="goal-category-badge">{{ categoryName }}</div>
+        <button class="btn edit-goal-btn" (click)="goToEdit()">Редагувати</button>
       </div>
     </div>
 
     <div class="goal-image">
-      <img src="assets/goal-placeholder.jpg" alt="Зображення цілі" />
+      @if (goal.picture) {
+        <img [src]="goal.picture" [alt]="goal.title" />
+      } @else {
+        <img src="assets/images/placeholder-goal.png" alt="Заглушка" />
+      }
     </div>
   </div>
 
   <div class="goal-progress-bar">
-    <div class="progress-fill" style="width: 60%;"></div>
-    <span class="progress-label">60%</span>
+    <div class="progress-fill" [style.width.%]="progressPercentage"></div>
+    <span class="progress-label">{{ progressPercentage }}% часу пройшло</span>
   </div>
 
   <div class="steps-section">
     <div class="section-header">
       <h2>Steps</h2>
-      <button class="btn add-step-btn">+</button>
+      <button class="btn add-step-btn" (click)="startAddingStep()">+</button>
     </div>
+
     <ul class="steps-list">
-      <li><input type="checkbox" /> Зареєструвати тренувальний план</li>
-      <li><input type="checkbox" /> Пройти перше тренування</li>
-      <li><input type="checkbox" /> Відстежити прогрес у додатку</li>
+      @for (step of goal.steps; track step.stepId; let i = $index) {
+        <li [class.step-completed]="step.isCompleted">
+          
+          <input type="checkbox" [checked]="step.isCompleted" (change)="toggleStep(step.stepId, i)" />
+          
+          <span [class.step-text-done]="step.isCompleted" 
+                [class.step-text]="!step.isCompleted">
+            {{ step.description }}
+          </span>
+          
+          <button class="delete-step-btn" (click)="deleteStep(step.stepId, i)">✕</button>
+        </li>
+      }
+
+      @if (isAddingStep) {
+        <li class="new-step-row">
+           <div class="fake-checkbox"></div>
+           
+           <input 
+              type="text" 
+              class="new-step-input" 
+              [(ngModel)]="newStepDescription" 
+              [placeholder]="aiSuggestion"
+              (keyup.enter)="saveNewStep()" 
+              autoFocus 
+           />
+           
+           <div class="new-step-actions">
+              <button class="save-btn" (click)="saveNewStep()">✔</button>
+              <button class="cancel-btn" (click)="cancelAddingStep()">✕</button>
+           </div>
+        </li>
+      }
     </ul>
   </div>
 
   <hr class="section-divider" />
 
   <div class="bottom-section">
-
     <div class="calendar-section">
       <div class="calendar-header">
         <button class="cal-nav-btn" (click)="changeMonth(-1)">&#10094;</button>
         <h3 class="current-month">{{ currentMonthName }}</h3>
         <button class="cal-nav-btn" (click)="changeMonth(1)">&#10095;</button>
       </div>
-
       <div class="calendar-grid">
         <div class="day-name">Пн</div>
         <div class="day-name">Вт</div>
@@ -68,15 +100,16 @@
         <div class="day-name">Пт</div>
         <div class="day-name">Сб</div>
         <div class="day-name">Нд</div>
-
         @for (day of calendarDays; track $index) {
-        @if (day.dayNumber) {
-        <div class="day-cell" [class.active-day]="day.isToday">
-          {{ day.dayNumber }}
-        </div>
-        } @else {
-        <div class="day-cell empty"></div>
-        }
+          @if (day.dayNumber) {
+          <div class="day-cell" 
+               [class.active-day]="day.isToday" 
+               [class.period-day]="day.isInPeriod && !day.isToday">
+            {{ day.dayNumber }}
+          </div>
+          } @else {
+          <div class="day-cell empty"></div>
+          }
         }
       </div>
     </div>
@@ -86,93 +119,19 @@
         <h2>Notes</h2>
         <button class="btn add-note-btn">+</button>
       </div>
-
       <ul class="notes-skeleton-list">
-
         <li class="notes-skeleton">
           <div class="lines-wrapper">
-            <div class="s-line"></div>
-            <div class="s-line"></div>
-            <div class="s-line"></div>
-            <div class="s-line"></div>
-            <div class="s-line s-highlight" style="width: 70%"></div>
-            <div class="s-line"></div>
+             <div class="s-line"></div><div class="s-line s-highlight" style="width: 70%"></div><div class="s-line"></div>
           </div>
-          <div class="note-popup">
-            Не забути купити нові кросівки до п'ятниці 👟
-          </div>
-        </li>
-
-        <li class="notes-skeleton">
-          <div class="lines-wrapper">
-            <div class="s-line"></div>
-            <div class="s-line"></div>
-            <div class="s-line"></div>
-            <div class="s-line"></div>
-            <div class="s-line"></div>
-            <div class="s-line"></div>
-          </div>
-          <div class="note-popup">
-            Записатися до лікаря на чекап 🩺
-          </div>
-        </li>
-
-        <li class="notes-skeleton">
-          <div class="lines-wrapper">
-            <div class="s-line"></div>
-            <div class="s-line s-highlight" style="width: 50%"></div>
-            <div class="s-line"></div>
-            <div class="s-line"></div>
-            <div class="s-line"></div>
-            <div class="s-line"></div>
-          </div>
-          <div class="note-popup">
-            Подзвонити тренеру о 18:00 📞
-          </div>
-        </li>
-
-        <li class="notes-skeleton">
-          <div class="lines-wrapper">
-            <div class="s-line"></div>
-            <div class="s-line"></div>
-            <div class="s-line"></div>
-            <div class="s-line" style="width: 80%"></div>
-            <div class="s-line"></div>
-            <div class="s-line"></div>
-          </div>
-          <div class="note-popup">
-            Переглянути відео по Angular Components 💻
-          </div>
-        </li>
-
-        <li class="notes-skeleton">
-          <div class="lines-wrapper">
-            <div class="s-line"></div>
-            <div class="s-line s-highlight"></div>
-            <div class="s-line"></div>
-            <div class="s-line"></div>
-            <div class="s-line"></div>
-            <div class="s-line"></div>
-          </div>
-          <div class="note-popup">
-            Купити протеїн та вітаміни 💊
-          </div>
-        </li>
-
-        <li class="notes-skeleton">
-          <div class="lines-wrapper">
-            <div class="s-line"></div>
-            <div class="s-line"></div>
-            <div class="s-line"></div>
-            <div class="s-line"></div>
-            <div class="s-line" style="width: 60%"></div>
-            <div class="s-line"></div>
-          </div>
-          <div class="note-popup">
-            Зробити розтяжку ввечері 🧘‍♀️
-          </div>
+          <div class="note-popup">Приклад нотатки 📝</div>
         </li>
       </ul>
     </div>
   </div>
 </div>
+} @else {
+  <div style="text-align: center; padding: 50px; color: white;">
+    <h2>Завантаження...</h2>
+  </div>
+}

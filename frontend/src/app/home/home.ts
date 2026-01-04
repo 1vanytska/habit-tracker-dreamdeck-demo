@@ -1,5 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { Goal } from '../goal/goal.model';
+import { GoalService } from '../goal/goal.service';
 
 @Component({
   selector: 'app-home',
@@ -7,6 +9,27 @@ import { RouterLink } from '@angular/router';
   templateUrl: './home.html',
   styleUrl: './home.css'
 })
-export class Home {
 
+export class Home implements OnInit {
+  goals: Goal[] = [];
+
+  currentUserId: string = 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11'; 
+
+  constructor(private goalService: GoalService) {}
+
+  ngOnInit(): void {
+    this.loadUserGoals();
+  }
+
+  loadUserGoals(): void {
+    this.goalService.getGoalsByUserId(this.currentUserId).subscribe({
+      next: (data) => {
+        this.goals = data;
+        console.log('Цілі завантажено:', this.goals);
+      },
+      error: (err) => {
+        console.error('Помилка при завантаженні цілей:', err);
+      }
+    });
+  }
 }

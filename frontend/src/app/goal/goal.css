@@ -164,18 +164,121 @@
   align-items: center;
   gap: 0.5rem;
   margin-bottom: 0.5rem;
+  position: relative;
+  transition: background-color 0.2s ease, opacity 0.2s ease;
 }
 
-.steps-list li:nth-child(odd) {
+.steps-list li:nth-child(odd):not(.new-step-row):not(.step-completed) {
   background-color: #f0f8fd;
   border-radius: 6px;
   padding: 0.5rem;
 }
 
-.steps-list li:nth-child(even) {
+.steps-list li:nth-child(even):not(.new-step-row):not(.step-completed) {
   background-color: #e0f4ff;
   border-radius: 6px;
   padding: 0.5rem;
+}
+
+.step-completed {
+  background-color: #f5f5f5 !important;
+  opacity: 0.6;
+  border-radius: 6px;
+  padding: 0.5rem;
+}
+
+.step-text-done {
+  text-decoration: line-through;
+  color: #8898aa;
+}
+
+.step-text {
+  color: #147ba0;
+  font-weight: 500;
+}
+
+.delete-step-btn {
+  margin-left: auto;
+  background: none;
+  border: none;
+  color: #147ba0;
+  font-size: 1.2rem;
+  cursor: pointer;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.2s, visibility 0.2s;
+}
+
+.delete-step-btn:hover {
+  opacity: 1 !important;
+  font-weight: bold;
+}
+
+.steps-list li:hover .delete-step-btn {
+  opacity: 0.7;
+  visibility: visible;
+}
+
+.new-step-row {
+  border: 1px dashed #147ba0;
+  background-color: rgba(20, 123, 160, 0.05) !important;
+  margin-top: 10px;
+  border-radius: 6px;
+  padding: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.fake-checkbox {
+  width: 13px;
+  height: 13px;
+  border: 1px solid #777;
+  border-radius: 2px;
+  margin: 3px; 
+}
+
+.new-step-input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  color: #147ba0;
+  font-size: 1rem;
+  outline: none;
+}
+
+.new-step-input::placeholder {
+  color: rgba(20, 123, 160, 0.5);
+  font-style: italic;
+}
+
+.new-step-actions {
+  display: flex;
+  gap: 8px;
+  margin-left: auto;
+}
+
+.save-btn {
+  background: none;
+  border: none;
+  color: #147ba0;
+  font-size: 1.2rem;
+  cursor: pointer;
+  opacity: 0.8;
+}
+
+.cancel-btn {
+  background: none;
+  border: none;
+  color: #147ba0;
+  font-size: 1.2rem;
+  cursor: pointer;
+  opacity: 0.8;
+}
+
+.save-btn:hover, .cancel-btn:hover {
+  opacity: 1;
+  font-weight: bold;
 }
 
 .section-divider {
@@ -293,6 +396,12 @@
 
 .day-cell.empty {
   cursor: default;
+}
+
+.period-day {
+  background-color: rgba(20, 123, 160, 0.2);
+  color: #fff;
+  border-radius: 5px;
 }
 
 .notes-section {

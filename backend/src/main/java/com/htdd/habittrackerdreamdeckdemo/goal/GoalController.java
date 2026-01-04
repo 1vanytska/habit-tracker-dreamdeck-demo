@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -15,9 +16,9 @@ public class GoalController {
 
     private final GoalService goalService;
 
-    @GetMapping
-    public ResponseEntity<?> getAllGoal() {
-        return ResponseEntity.ok(goalService.getAllGoals());
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<List<Goal>> getGoalsByUserId(@PathVariable UUID userId) {
+        return ResponseEntity.ok(goalService.getGoalsByUserId(userId));
     }
 
     @GetMapping("/{id}")

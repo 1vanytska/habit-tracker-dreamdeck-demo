@@ -18,7 +18,7 @@ export class EditGoal implements OnInit {
   
   goal: Goal = {
     goalId: '',
-    userId: '11111111-1111-1111-1111-111111111111',
+    userId: 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11',
     title: '',
     picture: null,
     description: '',
@@ -28,7 +28,9 @@ export class EditGoal implements OnInit {
     deadline: '',
     status: 'IN_PROGRESS',
     isArchived: false,
-    archivingTime: null
+    archivingTime: null,
+
+    steps: []
   };
 
   currentImageDisplay: string = 'assets/images/placeholder-goal.png';

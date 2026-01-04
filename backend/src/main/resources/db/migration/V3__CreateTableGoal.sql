@@ -7,6 +7,7 @@ CREATE TABLE IF NOT EXISTS goal
     description TEXT,
     category_id UUID NOT NULL,
     is_public BOOLEAN NOT NULL,
+    start_date DATE,
     deadline DATE NOT NULL,
     status TEXT NOT NULL,
     is_archived BOOLEAN NOT NULL,

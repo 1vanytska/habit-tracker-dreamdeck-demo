@@ -17,7 +17,7 @@ public class GoalService {
         return goalRepository.findAll();
     }
 
-    public List<Goal> getAllGoalsByUserId(UUID userId) { return
+    public List<Goal> getGoalsByUserId(UUID userId) { return
             goalRepository.findByUserId(userId); }
 
     public Optional<Goal> getGoalById(UUID goalId) {

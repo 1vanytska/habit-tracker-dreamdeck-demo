@@ -1,3 +1,9 @@
+export interface Step {
+  stepId: string;
+  description: string;
+  isCompleted: boolean;
+}
+
 export interface Goal {
   goalId: string;
   userId: string;
@@ -11,4 +17,6 @@ export interface Goal {
   status: string;
   isArchived: boolean;
   archivingTime: string | null;
+
+  steps: Step[];
 }

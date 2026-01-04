@@ -1,5 +1,7 @@
 package com.htdd.habittrackerdreamdeckdemo.goal;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.htdd.habittrackerdreamdeckdemo.step.Step;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -7,6 +9,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Data
@@ -57,6 +61,10 @@ public class Goal {
 
     @Column(name = "archiving_time")
     private LocalDate archivingTime;
+
+    @OneToMany(mappedBy = "goal", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
+    private List<Step> steps = new ArrayList<>();
 
     public Goal(UUID userId, String title, String picture, String description,
                 UUID categoryId, boolean isPublic, LocalDate startDate, LocalDate deadline,
