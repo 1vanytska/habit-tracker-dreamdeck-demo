@@ -1,16 +1,19 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common'; 
 import { FormsModule } from '@angular/forms'; 
 import { ActivatedRoute, Router } from '@angular/router';
 import { GoalService } from './goal.service';
-import { Goal as GoalModel, Step } from './goal.model';
+import { Goal as GoalModel } from './goal.model';
 import { CategoryService } from '../category/category.service';
+import { NoteService, Note } from './note/note.service';
 
 interface CalendarDay {
   dayNumber: number | null;
+  fullDate: Date | null;
   isToday: boolean;
   isWeekend: boolean;
   isInPeriod: boolean;
+  hasNote: boolean;
 }
 
 @Component({
@@ -22,6 +25,12 @@ interface CalendarDay {
 })
 export class Goal implements OnInit {
   
+  private route = inject(ActivatedRoute);
+  private router = inject(Router);
+  private goalService = inject(GoalService);
+  private categoryService = inject(CategoryService);
+  private noteService = inject(NoteService);
+
   goal: GoalModel | null = null;
   categoryName: string = 'Завантаження...';
   daysLeft: number = 0;
@@ -36,30 +45,60 @@ export class Goal implements OnInit {
   calendarDays: CalendarDay[] = [];
   currentMonthName: string = '';
 
-  constructor(
-    private route: ActivatedRoute,
-    private router: Router,
-    private goalService: GoalService,
-    private categoryService: CategoryService
-  ) {}
+  notes: Note[] = [];
+  recentNotes: Note[] = [];
+  
+  isModalOpen: boolean = false;
+  selectedDate: Date | null = null;
+  currentNoteContent: string = '';
+  editingNoteId: string | null = null; 
+
+  constructor() {}
 
   ngOnInit(): void {
-    this.generateCalendar(); 
+    this.generateCalendar();
+
     const id = this.route.snapshot.paramMap.get('id');
-    if (id) this.loadGoal(id);
+    if (id) {
+      this.loadGoal(id);
+    }
   }
 
   loadGoal(id: string): void {
     this.goalService.getGoalById(id).subscribe({
       next: (data) => {
         this.goal = data;
+        
+        this.generateCalendar(); 
+
         if (!this.goal.steps) this.goal.steps = [];
         this.calculateMetrics();
         this.loadCategoryName(data.categoryId);
+        
+        this.loadNotes(id);
+      },
+      error: (err) => console.error('Помилка завантаження цілі:', err)
+    });
+  }
+
+  loadNotes(goalId: string): void {
+    this.noteService.getNotesByGoal(goalId).subscribe({
+      next: (data) => {
+        this.notes = data;
+        this.updateRecentNotes();
         this.generateCalendar(); 
       },
-      error: (err) => console.error('Помилка:', err)
+      error: (err) => {
+        console.error('Помилка завантаження нотаток:', err);
+        this.generateCalendar(); 
+      }
     });
+  }
+
+  private updateRecentNotes(): void {
+    this.recentNotes = [...this.notes]
+      .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+      .slice(0, 5);
   }
 
   startAddingStep(): void {
@@ -156,18 +195,27 @@ export class Goal implements OnInit {
   generateCalendar(): void {
     const year = this.displayDate.getFullYear();
     const month = this.displayDate.getMonth();
+    
     this.currentMonthName = new Intl.DateTimeFormat('uk-UA', { month: 'long', year: 'numeric' }).format(this.displayDate);
     this.currentMonthName = this.currentMonthName.charAt(0).toUpperCase() + this.currentMonthName.slice(1);
+    
     const firstDay = new Date(year, month, 1);
     const daysInMonth = new Date(year, month + 1, 0).getDate();
+    
     let startDayOfWeek = firstDay.getDay() - 1; 
     if (startDayOfWeek === -1) startDayOfWeek = 6;
+    
     this.calendarDays = [];
+    
     for (let i = 0; i < startDayOfWeek; i++) {
-      this.calendarDays.push({ dayNumber: null, isToday: false, isWeekend: false, isInPeriod: false });
+      this.calendarDays.push({ 
+        dayNumber: null, fullDate: null, isToday: false, isWeekend: false, isInPeriod: false, hasNote: false 
+      });
     }
+    
     const today = new Date();
     today.setHours(0,0,0,0);
+    
     let goalStart: Date | null = null;
     let goalEnd: Date | null = null;
     if (this.goal) {
@@ -176,18 +224,30 @@ export class Goal implements OnInit {
         goalStart.setHours(0,0,0,0);
         goalEnd.setHours(0,0,0,0);
     }
+
     for (let i = 1; i <= daysInMonth; i++) {
       const currentIteratedDate = new Date(year, month, i);
       currentIteratedDate.setHours(0,0,0,0);
+      
       const isToday = currentIteratedDate.getTime() === today.getTime();
       const currentDayOfWeek = currentIteratedDate.getDay();
       const isWeekend = currentDayOfWeek === 0 || currentDayOfWeek === 6;
+      
       let isInPeriod = false;
       if (goalStart && goalEnd) {
           isInPeriod = currentIteratedDate >= goalStart && currentIteratedDate <= goalEnd;
       }
+
+      const dateStr = this.formatDate(currentIteratedDate);
+      const hasNote = this.notes.some(n => n.date === dateStr);
+
       this.calendarDays.push({ 
-        dayNumber: i, isToday: isToday, isWeekend: isWeekend, isInPeriod: isInPeriod 
+        dayNumber: i, 
+        fullDate: currentIteratedDate,
+        isToday: isToday, 
+        isWeekend: isWeekend, 
+        isInPeriod: isInPeriod,
+        hasNote: hasNote 
       });
     }
   }
@@ -197,5 +257,106 @@ export class Goal implements OnInit {
     newDate.setMonth(newDate.getMonth() + offset);
     this.displayDate = newDate;
     this.generateCalendar();
+  }
+
+  openNoteModal(day: CalendarDay): void {
+    if (!day.fullDate) return;
+
+    this.selectedDate = day.fullDate;
+    const dateStr = this.formatDate(this.selectedDate);
+    
+    const existingNote = this.notes.find(n => n.date === dateStr);
+    
+    if (existingNote) {
+      this.currentNoteContent = existingNote.content;
+      this.editingNoteId = existingNote.noteId || null;
+    } else {
+      this.currentNoteContent = '';
+      this.editingNoteId = null;
+    }
+
+    this.isModalOpen = true;
+  }
+
+  closeModal(): void {
+    this.isModalOpen = false;
+    this.selectedDate = null;
+    this.currentNoteContent = '';
+  }
+
+  saveNote(): void {
+    if (!this.selectedDate || !this.goal) return;
+    
+    const dateStr = this.formatDate(this.selectedDate);
+    const content = this.currentNoteContent.trim();
+
+    if (!content) {
+        alert("Нотатка не може бути порожньою");
+        return; 
+    }
+
+    const noteToSave: Note = {
+        goalId: this.goal.goalId,
+        date: dateStr,
+        content: content
+    };
+
+    this.noteService.saveNote(noteToSave).subscribe({
+        next: (savedNote) => {
+            this.notes = this.notes.filter(n => n.date !== dateStr);
+            this.notes.push(savedNote);
+            
+            this.updateRecentNotes();
+            this.generateCalendar(); 
+            this.closeModal();
+        },
+        error: (err) => {
+            console.error('Помилка збереження:', err);
+            alert('Не вдалося зберегти нотатку');
+        }
+    });
+  }
+
+  private formatDate(date: Date): string {
+    const offset = date.getTimezoneOffset();
+    const dateLocal = new Date(date.getTime() - (offset * 60 * 1000));
+    return dateLocal.toISOString().split('T')[0];
+  }
+
+  openNoteFromList(note: Note): void {
+    const dateParts = note.date.split('-');
+    const newDate = new Date(
+      parseInt(dateParts[0]), 
+      parseInt(dateParts[1]) - 1, 
+      parseInt(dateParts[2])
+    );
+
+    this.selectedDate = newDate;
+    this.currentNoteContent = note.content;
+    this.editingNoteId = note.noteId || null;
+    this.isModalOpen = true;
+  }
+
+  deleteNote(): void {
+    if (!this.editingNoteId) {
+      this.closeModal();
+      return;
+    }
+
+    if (confirm('Видалити цю нотатку назавжди?')) {
+      this.noteService.deleteNote(this.editingNoteId).subscribe({
+        next: () => {
+          this.notes = this.notes.filter(n => n.noteId !== this.editingNoteId);
+          
+          this.updateRecentNotes();
+          this.generateCalendar();
+          this.closeModal();
+        },
+        error: (err) => {
+          console.error('Помилка видалення:', err);
+          alert('Не вдалося видалити нотатку');
+        }
+      });
+    }
   }
 }

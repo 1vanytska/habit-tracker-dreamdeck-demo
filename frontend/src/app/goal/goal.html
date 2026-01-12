@@ -28,9 +28,9 @@
 
     <div class="goal-image">
       @if (goal.picture) {
-        <img [src]="goal.picture" [alt]="goal.title" />
+      <img [src]="goal.picture" [alt]="goal.title" />
       } @else {
-        <img src="assets/images/placeholder-goal.png" alt="Заглушка" />
+      <img src="assets/images/placeholder-goal.png" alt="Заглушка" />
       }
     </div>
   </div>
@@ -48,37 +48,30 @@
 
     <ul class="steps-list">
       @for (step of goal.steps; track step.stepId; let i = $index) {
-        <li [class.step-completed]="step.isCompleted">
-          
-          <input type="checkbox" [checked]="step.isCompleted" (change)="toggleStep(step.stepId, i)" />
-          
-          <span [class.step-text-done]="step.isCompleted" 
-                [class.step-text]="!step.isCompleted">
-            {{ step.description }}
-          </span>
-          
-          <button class="delete-step-btn" (click)="deleteStep(step.stepId, i)">✕</button>
-        </li>
+      <li [class.step-completed]="step.isCompleted">
+
+        <input type="checkbox" [checked]="step.isCompleted" (change)="toggleStep(step.stepId, i)" />
+
+        <span [class.step-text-done]="step.isCompleted" [class.step-text]="!step.isCompleted">
+          {{ step.description }}
+        </span>
+
+        <button class="delete-step-btn" (click)="deleteStep(step.stepId, i)">✕</button>
+      </li>
       }
 
       @if (isAddingStep) {
-        <li class="new-step-row">
-           <div class="fake-checkbox"></div>
-           
-           <input 
-              type="text" 
-              class="new-step-input" 
-              [(ngModel)]="newStepDescription" 
-              [placeholder]="aiSuggestion"
-              (keyup.enter)="saveNewStep()" 
-              autoFocus 
-           />
-           
-           <div class="new-step-actions">
-              <button class="save-btn" (click)="saveNewStep()">✔</button>
-              <button class="cancel-btn" (click)="cancelAddingStep()">✕</button>
-           </div>
-        </li>
+      <li class="new-step-row">
+        <div class="fake-checkbox"></div>
+
+        <input type="text" class="new-step-input" [(ngModel)]="newStepDescription" [placeholder]="aiSuggestion"
+          (keyup.enter)="saveNewStep()" autoFocus />
+
+        <div class="new-step-actions">
+          <button class="save-btn" (click)="saveNewStep()">✔</button>
+          <button class="cancel-btn" (click)="cancelAddingStep()">✕</button>
+        </div>
+      </li>
       }
     </ul>
   </div>
@@ -100,38 +93,75 @@
         <div class="day-name">Пт</div>
         <div class="day-name">Сб</div>
         <div class="day-name">Нд</div>
+
         @for (day of calendarDays; track $index) {
-          @if (day.dayNumber) {
-          <div class="day-cell" 
-               [class.active-day]="day.isToday" 
-               [class.period-day]="day.isInPeriod && !day.isToday">
-            {{ day.dayNumber }}
-          </div>
-          } @else {
-          <div class="day-cell empty"></div>
+        @if (day.dayNumber) {
+        <div class="day-cell" [class.active-day]="day.isToday" [class.period-day]="day.isInPeriod && !day.isToday"
+          (click)="openNoteModal(day)">
+
+          {{ day.dayNumber }}
+
+          @if (day.hasNote) {
+          <div class="note-dot"></div>
           }
+        </div>
+        } @else {
+        <div class="day-cell empty"></div>
+        }
         }
       </div>
     </div>
 
     <div class="notes-section">
       <div class="section-header">
-        <h2>Notes</h2>
-        <button class="btn add-note-btn">+</button>
+        <h2>Нотатки</h2> <button class="btn add-note-btn"
+          (click)="openNoteModal({dayNumber: currentDate.getDate(), fullDate: currentDate, isToday: true, isWeekend: false, isInPeriod: true, hasNote: false})">+</button>
       </div>
-      <ul class="notes-skeleton-list">
-        <li class="notes-skeleton">
-          <div class="lines-wrapper">
-             <div class="s-line"></div><div class="s-line s-highlight" style="width: 70%"></div><div class="s-line"></div>
-          </div>
-          <div class="note-popup">Приклад нотатки 📝</div>
+
+      <ul class="recent-notes-list">
+        @for (note of recentNotes; track note.noteId) {
+        <li class="mini-note-item" (click)="openNoteFromList(note)">
+          <span class="note-date">{{ note.date | date:'dd.MM' }}</span>
+          <span class="note-preview">{{ note.content }}</span>
         </li>
+        }
+        @if (recentNotes.length === 0) {
+        <li class="empty-notes-hint">Натисніть на день у календарі, щоб додати запис.</li>
+        }
       </ul>
     </div>
   </div>
 </div>
 } @else {
-  <div style="text-align: center; padding: 50px; color: white;">
-    <h2>Завантаження...</h2>
+}
+
+@if (isModalOpen) {
+<div class="modal-overlay" (click)="closeModal()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+
+    <div class="modal-header">
+      <h3>{{ selectedDate | date:'dd.MM.yyyy' }}</h3> 
+      
+      <button class="close-modal-btn" (click)="closeModal()">
+        ✕
+      </button>
+    </div>
+
+    <div class="modal-body">
+      <textarea 
+        [(ngModel)]="currentNoteContent" 
+        placeholder="Що корисного зроблено сьогодні? Які думки?" 
+        rows="6"
+        class="note-textarea" 
+        autoFocus>
+      </textarea>
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn-delete" (click)="deleteNote()">Видалити</button>
+      <button class="btn-save" (click)="saveNote()">Зберегти</button>
+    </div>
+
   </div>
+</div>
 }
