@@ -169,3 +169,35 @@
   background-color: #6c757d;
   color: var(--white);
 }
+
+.btn-disabled-style {
+  background-color: #bdc3c7 !important;
+  color: #fff !important;
+  cursor: not-allowed !important;
+  box-shadow: none !important;
+  transform: none !important;
+}
+
+.unarchive-btn {
+  background-color: var(--primary-blue);
+  color: white;
+  border: none;
+  padding: 0.8rem 1.5rem;
+  border-radius: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.unarchive-btn:hover {
+  background-color: #0f6280;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(39, 174, 96, 0.3);
+}
+
+.actions-container {
+  display: flex;
+  gap: 1rem;
+  margin-top: 2rem;
+  align-items: center;
+}

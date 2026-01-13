@@ -26,7 +26,6 @@
 
 .goal-image {
   flex: 0 0 350px;
-  height: auto;
   background: white;
   padding: 0.5rem;
   border-radius: 12px;
@@ -35,11 +34,13 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  overflow: hidden;
+  min-height: 200px;
 }
 
 .goal-image img {
   width: 100%;
-  height: auto;
+  height: 100%;
   border-radius: 8px;
   object-fit: cover;
 }
@@ -52,28 +53,74 @@
 }
 
 .goal-description {
-  flex: 0 0 auto;
-  margin: 0;
+  margin: 0 0 1.5rem 0;
   font-size: 1rem;
-  background: #f0f8fd;
-  border: 2px solid #8fc2d5;
+  color: #5d7b89;
+  font-weight: 500;
+  background: none;
+  border: none;
+  padding: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  cursor: help;
+  transition: all 0.3s ease;
+  max-width: 100%;
+}
+
+.goal-description:hover {
+  white-space: normal;
+  overflow: visible;
+  background-color: #ffffff;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  padding: 1rem;
   border-radius: 8px;
-  padding: 0.5rem;
-  margin-bottom: 1.75rem;
+  position: relative;
+  z-index: 10;
 }
 
 .goal-dates {
-  flex: 0 0 auto;
-  display: flex;
-  gap: 2rem;
-  flex-wrap: wrap;
-  margin-bottom: 0.25rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 1rem;
+  background: white;
+  padding: 0.8rem 1rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(20, 123, 160, 0.05);
+  border: 1px solid #f0f4f8;
+  margin-bottom: 1rem;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .date-item {
   display: flex;
   flex-direction: column;
-  font-size: 0.95rem;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 0 0.5rem;
+  border-right: 1px solid #eef2f5;
+}
+
+.date-item:last-child {
+  border-right: none;
+}
+
+.date-item label {
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  color: #9aa8b4;
+  margin-bottom: 0.3rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.date-item span {
+  font-size: 1rem;
+  font-weight: 800;
+  color: #147ba0;
+  line-height: 1.2;
+  white-space: nowrap;
 }
 
 .date-item label {
@@ -81,13 +128,11 @@
   margin-bottom: 0.25rem;
 }
 
-.goal-meta {
-  flex: 0 0 auto;
+.goal-categories {
   display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
-  gap: 1rem;
-  margin-top: 1rem;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
 }
 
 .goal-category-badge {
@@ -97,16 +142,31 @@
   border-radius: 999px;
   font-weight: bold;
   font-size: 0.95rem;
+  box-shadow: none;
+  white-space: nowrap;
+}
+
+.goal-meta {
+  margin-top: auto;
 }
 
 .edit-goal-btn {
   background-color: #147ba0;
+  color: white;
   border: none;
-  border-radius: 4px;
-  padding: 0.5rem 1rem;
-  color: #fff;
+  border-radius: 50px;
+  padding: 0.6rem 1.5rem;
+  font-weight: 700;
+  font-size: 0.95rem;
   cursor: pointer;
-  font-weight: bold;
+  box-shadow: 0 4px 10px rgba(20, 123, 160, 0.2);
+  transition: all 0.2s ease;
+}
+
+.edit-goal-btn:hover {
+  background-color: #0f6280;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(20, 123, 160, 0.3);
 }
 
 .goal-progress-bar {
@@ -720,3 +780,54 @@
   from { transform: scale(0.9); opacity: 0; }
   to { transform: scale(1); opacity: 1; }
 }
+
+.archived-mode {
+  opacity: 0.9;
+  background-color: #fcfcfc;
+  border: 1px solid #e0e0e0;
+  box-shadow: none;
+}
+
+.archived-mode .goal-image img {
+  filter: grayscale(100%);
+  opacity: 0.7;
+  transition: all 0.5s ease;
+}
+
+.archived-mode .goal-image img:hover {
+  filter: grayscale(0%);
+  opacity: 1;
+}
+
+.archived-mode .goal-name,
+.archived-mode .goal-description,
+.archived-mode .date-item span,
+.archived-mode .date-item label {
+  color: #7f8c8d !important;
+}
+
+.archived-mode .goal-dates {
+  background-color: #f4f4f4;
+  border-color: #e0e0e0;
+}
+
+.archived-mode .date-item {
+  border-color: #e0e0e0;
+}
+
+.archived-mode .steps-section,
+.archived-mode .calendar-section,
+.archived-mode .notes-section,
+.archived-mode .goal-progress-bar,
+.archived-mode .goal-category-badge {
+  opacity: 0.6;
+  filter: grayscale(100%);
+  pointer-events: none;
+  user-select: none;
+}
+
+.archived-mode .goal-category-badge {
+  background-color: #e0e0e0;
+  color: #7f8c8d;
+}
+

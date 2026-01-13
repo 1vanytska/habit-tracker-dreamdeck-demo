@@ -112,3 +112,19 @@
   font-size: 1rem;
   color: white;
 }
+
+.card {
+  transition: all 0.3s ease;
+}
+
+.archived-card img{
+  filter: grayscale(100%);
+  opacity: 0.7;
+}
+
+.archived-card:hover {
+  filter: grayscale(0%);
+  opacity: 1;
+  transform: translateY(-3px);
+  box-shadow: 0 8px 15px rgba(20, 123, 160, 0.2);
+}

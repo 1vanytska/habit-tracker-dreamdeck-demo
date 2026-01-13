@@ -1,9 +1,11 @@
 @if (goal) {
-<div class="goal-detail-container">
+<div class="goal-detail-container" [class.archived-mode]="goal.isArchived">
   <div class="goal-header">
     <div class="goal-text">
       <h1 class="goal-name">{{ goal.title }}</h1>
-      <p class="goal-description">{{ goal.description || 'Опис відсутній' }}</p>
+      <p class="goal-description" [title]="goal.description || ''">
+        {{ goal.description || 'Опис відсутній' }}
+      </p>
 
       <div class="goal-dates">
         <div class="date-item">
@@ -20,8 +22,11 @@
         </div>
       </div>
 
-      <div class="goal-meta">
+      <div class="goal-categories">
         <div class="goal-category-badge">{{ categoryName }}</div>
+        </div>
+
+      <div class="goal-meta">
         <button class="btn edit-goal-btn" (click)="goToEdit()">Редагувати</button>
       </div>
     </div>

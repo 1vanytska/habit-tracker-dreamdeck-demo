@@ -65,18 +65,30 @@
             class="form-input" 
             [(ngModel)]="goal.deadline" 
             name="deadline" 
+            [min]="goal.startDate"
             required>
       </div>
 
     <div class="actions-container">
-      <button type="submit" class="btn btn-primary save-btn">
+      
+      <button type="submit" class="btn btn-primary save-btn" 
+        [disabled]="goal.isArchived" 
+        [class.btn-disabled-style]="goal.isArchived">
         {{ isEditMode ? 'Зберегти зміни' : 'Створити ціль' }}
       </button>
 
       @if (isEditMode) {
-      <button type="button" class="btn btn-secondary archive-btn" (click)="archiveGoal()">
-        Архівувати ціль
-      </button>
+        
+        @if (goal.isArchived) {
+          <button type="button" class="btn btn-success unarchive-btn" (click)="unarchiveGoal()">
+            Розархівувати ціль
+          </button>
+        } @else {
+          <button type="button" class="btn btn-secondary archive-btn" (click)="archiveGoal()">
+            Архівувати ціль
+          </button>
+        }
+
       }
     </div>
 

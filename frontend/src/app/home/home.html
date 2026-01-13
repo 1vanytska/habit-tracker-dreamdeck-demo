@@ -17,7 +17,10 @@
     <div class="cards-grid">
         
         @for (goal of goals; track goal.goalId) {
-            <div class="card" [routerLink]="['/goal', goal.goalId]" style="cursor: pointer;">
+            <div class="card" 
+                 [routerLink]="['/goal', goal.goalId]" 
+                 [class.archived-card]="goal.isArchived"
+                 style="cursor: pointer;">
                 
                 @if (goal.picture) {
                     <img [src]="goal.picture" [alt]="goal.title" class="card-img" />

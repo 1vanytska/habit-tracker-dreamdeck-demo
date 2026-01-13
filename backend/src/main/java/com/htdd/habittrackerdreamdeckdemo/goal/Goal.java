@@ -1,6 +1,7 @@
 package com.htdd.habittrackerdreamdeckdemo.goal;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.htdd.habittrackerdreamdeckdemo.step.Step;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
@@ -56,6 +57,7 @@ public class Goal {
     private String status;
 
     @NotNull
+    @JsonProperty("isArchived")
     @Column(name = "is_archived", nullable = false)
     private boolean isArchived;
 

@@ -15,7 +15,7 @@ import { Category } from '../../category/category.model';
   styleUrl: './edit-goal.css'
 })
 export class EditGoal implements OnInit {
-  
+
   goal: Goal = {
     goalId: '',
     userId: 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11',
@@ -43,12 +43,12 @@ export class EditGoal implements OnInit {
     private categoryService: CategoryService,
     private route: ActivatedRoute,
     private router: Router
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.loadCategories();
     const id = this.route.snapshot.paramMap.get('id');
-    
+
     if (id) {
       this.isEditMode = true;
       this.loadGoal(id);
@@ -94,12 +94,16 @@ export class EditGoal implements OnInit {
       alert('Помилка: Виберіть категорію!');
       return;
     }
+    if (!this.goal.startDate) {
+      alert('Помилка: Вкажіть дату початку!');
+      return;
+    }
     if (!this.goal.deadline) {
       alert('Помилка: Вкажіть дедлайн!');
       return;
     }
-    if (!this.goal.startDate) {
-      alert('Помилка: Вкажіть дату початку!');
+    if (this.goal.startDate > this.goal.deadline) {
+      alert('Помилка: Дедлайн не може бути раніше дати початку!');
       return;
     }
 
@@ -136,18 +140,26 @@ export class EditGoal implements OnInit {
     }
   }
 
+  unarchiveGoal(): void {
+    if (confirm('Розархівувати цю ціль? Вона знову стане активною.')) {
+      this.goal.isArchived = false;
+      this.goal.archivingTime = null;
+      this.saveGoal();
+    }
+  }
+
   onFileSelected(event: any): void {
     const file = event.target.files[0];
     if (file) {
       const reader = new FileReader();
-      
+
       reader.onload = (e: any) => {
         const base64String = e.target.result;
 
         this.currentImageDisplay = base64String;
-        this.goal.picture = base64String; 
+        this.goal.picture = base64String;
       };
-      
+
       reader.readAsDataURL(file);
     }
   }
