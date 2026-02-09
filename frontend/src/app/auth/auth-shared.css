@@ -1,0 +1,138 @@
+/* Контейнер */
+.auth-container {
+  display: flex;
+  justify-content: center;
+  align-items: center; /* Центруємо вертикально (рівні відступи зверху/знизу) */
+  width: 100%;
+  height: 100%;
+}
+
+/* --- КАРТКА: Компактна та стильна --- */
+.auth-card {
+  background: white;
+  
+  /* ЗМЕНШЕНО: менше "повітря", щоб картка була нижчою */
+  padding: 2rem 2.5rem;   
+  width: 100%;
+  max-width: 400px;       /* Вужча картка виглядає акуратніше */
+  
+  border-radius: 20px;    /* Сучасні закруглені кути */
+  
+  /* М'яка тінь, як на скріншоті */
+  box-shadow: 0 10px 40px rgba(20, 123, 160, 0.15);
+  
+  text-align: center;
+  border: 1px solid rgba(255, 255, 255, 0.5); /* Легкий контур */
+  position: relative; /* Щоб картка була вище фону */
+  z-index: 10;        /* Гарантовано зверху листочків */
+  background: rgba(255, 255, 255, 0.95); /* Легка прозорість фону картки, щоб листочки "миготіли" ззаду, якщо хочеш. Або залиш white */
+}
+
+/* Заголовок */
+.auth-title {
+  color: #1e3a52;         /* Глибокий синій */
+  font-size: 1.6rem;      /* Трохи менший шрифт */
+  margin-bottom: 0.5rem;
+  font-weight: 800;
+}
+
+/* Підзаголовок */
+.auth-subtitle {
+  color: #8898aa;
+  margin-bottom: 1.5rem;  /* Менший відступ до форми */
+  font-size: 0.9rem;
+}
+
+/* --- ФОРМА: Стиснута --- */
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;              /* ЗМЕНШЕНО: поля ближче одне до одного */
+  text-align: left;
+}
+
+.form-group label {
+  display: block;
+  font-weight: 600;
+  color: #4a5568;
+  margin-bottom: 0.4rem;
+  font-size: 0.85rem;     /* Акуратний маленький текст */
+  margin-left: 5px;
+}
+
+/* --- ПОЛЯ ВВОДУ: Низькі та сучасні --- */
+.form-group input {
+  width: 100%;
+  
+  /* ЗМЕНШЕНО: робимо поля нижчими */
+  padding: 0.75rem 1rem;  
+  
+  background-color: #f7fafc; /* Світло-сірий фон (як на скріншоті) */
+  border: 1px solid #e2e8f0; /* Тонкий бордер */
+  border-radius: 12px;
+  
+  font-size: 0.95rem;
+  color: #2d3748;
+  transition: all 0.2s ease;
+  outline: none;
+  box-sizing: border-box;
+}
+
+.form-group input::placeholder {
+  color: #cbd5e1;
+}
+
+.form-group input:focus {
+  background-color: #fff;
+  border-color: #147ba0;
+  box-shadow: 0 0 0 3px rgba(20, 123, 160, 0.1);
+}
+
+/* --- КНОПКА: Компактна --- */
+.auth-btn {
+  width: 100%;
+  
+  /* ЗМЕНШЕНО: тонша кнопка */
+  padding: 0.85rem;       
+  
+  font-size: 1rem;
+  font-weight: 600;
+  margin-top: 1rem;       /* Менший відступ від полів */
+  border-radius: 12px;
+  
+  background-color: #147ba0; /* Насичений синій */
+  color: white;
+  border: none;
+  
+  cursor: pointer;
+  transition: transform 0.2s, background-color 0.2s;
+  box-shadow: 0 4px 12px rgba(20, 123, 160, 0.25);
+}
+
+.auth-btn:hover:not(:disabled) {
+  background-color: #0f607d;
+  transform: translateY(-1px);
+}
+
+.auth-btn:disabled {
+  background-color: #cbd5e1;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+/* Посилання знизу */
+.auth-footer {
+  margin-top: 1.5rem;
+  color: #718096;
+  font-size: 0.85rem;
+}
+
+.auth-footer a {
+  color: #147ba0;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.auth-footer a:hover {
+  text-decoration: underline;
+}

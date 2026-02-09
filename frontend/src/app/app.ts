@@ -1,15 +1,31 @@
-import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
+import { RouterOutlet, Router, NavigationEnd } from '@angular/router';
+import { CommonModule } from '@angular/common';
+import { filter } from 'rxjs';
 import { Menu } from "./menu/menu";
 import { Footer } from "./footer/footer";
 import { Header } from "./header/header";
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, Menu, Footer, Header],
+  standalone: true,
+  imports: [RouterOutlet, Menu, Footer, Header, CommonModule],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })
-export class App {
+export class App implements OnInit {
   protected title = 'frontend';
+  showLayout: boolean = true;
+
+  constructor(private router: Router) {}
+
+  ngOnInit() {
+    this.router.events.pipe(
+      filter(event => event instanceof NavigationEnd)
+    ).subscribe((event: NavigationEnd) => {
+      const currentUrl = event.urlAfterRedirects || event.url;
+      const isAuthPage = currentUrl.includes('/login') || currentUrl.includes('/register');
+      this.showLayout = !isAuthPage;
+    });
+  }
 }
