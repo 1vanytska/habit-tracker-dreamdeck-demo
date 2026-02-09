@@ -1,0 +1,49 @@
+services:
+  dreamdeck-frontend:
+    container_name: dreamdeck-frontend
+    build: ./frontend
+    image: dreamdeck-frontend:v1
+    ports:
+      - 80:80
+    expose:
+      - 80
+    networks:
+      - dreamdeck-network
+
+  dreamdeck-backend:
+    container_name: dreamdeck-backend
+    build: ./backend
+    image: dreamdeck-backend:v1
+    ports:
+      - 8080:8080
+    expose:
+      - 8080
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/habit-tracker-db-demo
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: 0987
+    networks:
+      - dreamdeck-network
+    depends_on:
+      - postgres
+
+  postgres:
+    container_name: dreamdeck-db
+    image: 'postgres:16-alpine'
+    environment:
+      - 'POSTGRES_USER=postgres'
+      - 'POSTGRES_PASSWORD=0987'
+      - 'POSTGRES_DB=habit-tracker-db-demo'
+    ports:
+      - '5432:5432'
+    networks:
+      - dreamdeck-network
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+
+networks:
+  dreamdeck-network:
+    driver: bridge
+
+volumes:
+  pg_data:
