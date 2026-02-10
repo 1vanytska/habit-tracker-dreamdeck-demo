@@ -1,0 +1,17 @@
+# Compiled output Gradle
+build/
+
+# IntelliJ IDEA project files and directories
+.idea/
+*.iml
+*.iws
+
+# Log files and OS-specific files
+*.log
+.DS_Store
+Thumbs.db
+
+# Package Files
+*.jar
+*.war
+*.ear

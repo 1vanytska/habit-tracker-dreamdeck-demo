@@ -25,12 +25,12 @@ CREATE TABLE IF NOT EXISTS complaint
     date TIMESTAMP WITH TIME ZONE NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS goal_note
+CREATE TABLE IF NOT EXISTS note
 (
     note_id UUID PRIMARY KEY,
     goal_id UUID NOT NULL REFERENCES goal (goal_id),
-    date TIMESTAMP WITH TIME ZONE NOT NULL,
-                       content TEXT NOT NULL
+    date DATE NOT NULL,
+    content TEXT NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS step

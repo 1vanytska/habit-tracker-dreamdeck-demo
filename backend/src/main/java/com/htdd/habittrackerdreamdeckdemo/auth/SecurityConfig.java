@@ -26,11 +26,14 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/**").permitAll()
-                        .requestMatchers("/").permitAll()
-                        .anyRequest().authenticated()
+//                        .requestMatchers("/api/**").permitAll()
+//                        .requestMatchers("/").permitAll()
+//                        .anyRequest().authenticated()
+                          .anyRequest().permitAll()
                 )
-                .oauth2Login(Customizer.withDefaults());
+                .formLogin(AbstractHttpConfigurer::disable)
+                .httpBasic(AbstractHttpConfigurer::disable);
+//                .oauth2Login(Customizer.withDefaults());
 
         return http.build();
     }

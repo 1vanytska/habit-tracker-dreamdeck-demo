@@ -38,7 +38,7 @@ public class Goal {
     private String description;
 
     @NotNull
-    @Column(name = "category_id") // nullable = false
+    @Column(name = "category_id", nullable = false)
     private UUID categoryId;
 
     @NotNull

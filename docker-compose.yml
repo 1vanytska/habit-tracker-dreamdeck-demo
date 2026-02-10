@@ -1,0 +1,52 @@
+services:
+  dreamdeck-frontend:
+    container_name: dreamdeck-frontend
+    build: ./frontend
+    image: dreamdeck-frontend:v1
+    ports:
+      - 80:4200
+    expose:
+      - 4200
+    networks:
+      - dreamdeck-network
+    restart: unless-stopped
+
+  dreamdeck-backend:
+    container_name: dreamdeck-backend
+    build: ./backend
+    image: dreamdeck-backend:v1
+    ports:
+      - ${SERVER_PORT}:8080
+    expose:
+      - 8080
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://${DB_HOST}:${DB_PORT}/${POSTGRES_DB}
+      SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER}
+      SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD}
+    networks:
+      - dreamdeck-network
+    restart: unless-stopped
+    depends_on:
+      - postgres
+
+  postgres:
+    container_name: dreamdeck-db
+    image: 'postgres:17-alpine'
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    ports:
+      - '${DB_PORT}:5432'
+    networks:
+      - dreamdeck-network
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+    restart: unless-stopped
+
+networks:
+  dreamdeck-network:
+    driver: bridge
+
+volumes:
+  pg_data:

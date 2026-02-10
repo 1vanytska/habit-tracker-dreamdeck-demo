@@ -18,6 +18,7 @@ public class Category {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
 
-    @Column(nullable = false)
+    @Column
+    // (nullable = false)
     private String name;
 }
