@@ -3,7 +3,7 @@ WORKDIR /app
 COPY package*.json ./
 RUN --mount=type=cache,target=/root/.npm npm ci
 COPY . .
-RUN npm run build
+RUN npm run build -- --configuration=production
 
 FROM nginx:1.28.2-alpine3.23 AS production
 COPY nginx.conf /etc/nginx/nginx.conf
