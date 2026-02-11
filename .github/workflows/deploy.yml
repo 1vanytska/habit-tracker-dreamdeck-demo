@@ -10,6 +10,34 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Java & Checkstyle
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+      
+      - name: Run Java Linter
+        run: |
+          chmod +x backend/gradlew
+          cd backend
+          ./gradlew checkstyleMain
+        continue-on-error: true
+
+      - name: Setup Node & ESLint
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Run Angular Linter
+        run: |
+          cd frontend
+          npm ci --legacy-peer-deps
+          npm run lint
+        continue-on-error: true
+
       - name: Connect to EC2 and Run Script
         uses: appleboy/ssh-action@v1.0.3
         with:

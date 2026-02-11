@@ -32,25 +32,25 @@ export class Goal implements OnInit {
   private noteService = inject(NoteService);
 
   goal: GoalModel | null = null;
-  categoryName: string = 'Завантаження...';
-  daysLeft: number = 0;
-  progressPercentage: number = 0;
+  categoryName = 'Завантаження...';
+  daysLeft = 0;
+  progressPercentage = 0;
 
-  isAddingStep: boolean = false;
-  newStepDescription: string = '';
-  aiSuggestion: string = '';
+  isAddingStep = false;
+  newStepDescription = '';
+  aiSuggestion = '';
 
   currentDate: Date = new Date();
   displayDate: Date = new Date();
   calendarDays: CalendarDay[] = [];
-  currentMonthName: string = '';
+  currentMonthName = '';
 
   notes: Note[] = [];
   recentNotes: Note[] = [];
   
-  isModalOpen: boolean = false;
+  isModalOpen = false;
   selectedDate: Date | null = null;
-  currentNoteContent: string = '';
+  currentNoteContent = '';
   editingNoteId: string | null = null; 
 
   constructor() {}

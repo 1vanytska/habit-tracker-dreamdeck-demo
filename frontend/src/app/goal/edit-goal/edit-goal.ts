@@ -33,9 +33,9 @@ export class EditGoal implements OnInit {
     steps: []
   };
 
-  currentImageDisplay: string = 'assets/images/placeholder-goal.png';
-  isLoading: boolean = true;
-  isEditMode: boolean = false;
+  currentImageDisplay = 'assets/images/placeholder-goal.png';
+  isLoading = true;
+  isEditMode = false;
   categories: Category[] = [];
 
   constructor(
