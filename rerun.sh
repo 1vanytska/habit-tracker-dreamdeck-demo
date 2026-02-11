@@ -4,11 +4,11 @@ set -e
 
 echo "Starting deployment process..."
 
-echo "Pulling latest code..."
-git pull origin test
-
 echo "Stopping current containers..."
 docker compose down
+
+echo "Pulling latest code..."
+git pull origin test
 
 echo "Building and starting new containers..."
 docker compose up -d --build
