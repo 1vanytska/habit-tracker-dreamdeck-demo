@@ -44,6 +44,15 @@ services:
       - pg_data:/var/lib/postgresql/data
     restart: unless-stopped
 
+  logging:
+      driver: "awslogs"
+      options:
+        awslogs-region: "${AWS_REGION}"
+        awslogs-group: "${APP_NAME}-${COMPOSE_PROFILES}-api"
+        awslogs-datetime-format: '\[%b %d, %Y %H:%M:%S\]'
+        tag: "{{.Name}}/{{.ID}}"
+        awslogs-create-group: "true"
+
 networks:
   dreamdeck-network:
     driver: bridge
