@@ -10,6 +10,6 @@ COPY nginx.conf /etc/nginx/nginx.conf
 COPY --chown=nginx:nginx --from=build /app/dist/frontend/browser/. /usr/share/nginx/html/
 RUN cp /usr/share/nginx/html/index.csr.html /usr/share/nginx/html/index.html
 USER nginx
-EXPOSE 4200
+EXPOSE 80
 ENTRYPOINT ["nginx", "-c", "/etc/nginx/nginx.conf"]
 CMD ["-g", "daemon off;"]
