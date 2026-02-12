@@ -90,38 +90,52 @@ jobs:
 
 
   build-and-push:
-    needs: terraform
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v6
+      needs: terraform
+      runs-on: ubuntu-latest
+      steps:
+        - name: Checkout code
+          uses: actions/checkout@v6
 
-      - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v6
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ secrets.AWS_REGION }}
+        - name: Configure AWS Credentials
+          uses: aws-actions/configure-aws-credentials@v6
+          with:
+            aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+            aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+            aws-region: ${{ secrets.AWS_REGION }}
 
-      - name: Login to Amazon ECR
-        id: login-ecr
-        uses: aws-actions/amazon-ecr-login@v2
+        - name: Login to Amazon ECR
+          id: login-ecr
+          uses: aws-actions/amazon-ecr-login@v4
 
-      - name: Build & Push Backend
-        env:
-          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-        run: |
-          cd backend
-          docker build -t $ECR_REGISTRY/${{ env.ECR_REPO_NAME }}:backend-latest .
-          docker push $ECR_REGISTRY/${{ env.ECR_REPO_NAME }}:backend-latest
+        - name: Get current date
+          id: date
+          run: echo "date=$(date +'%Y-%m-%d-%H-%M')" >> $GITHUB_OUTPUT
 
-      - name: Build & Push Frontend
-        env:
-          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-        run: |
-          cd frontend
-          docker build -t $ECR_REGISTRY/${{ env.ECR_REPO_NAME }}:frontend-latest .
-          docker push $ECR_REGISTRY/${{ env.ECR_REPO_NAME }}:frontend-latest
+        - name: Build & Push Backend
+          env:
+            ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+            IMAGE_TAG: ${{ steps.date.outputs.date }} 
+          run: |
+            cd backend
+            docker build -t $ECR_REGISTRY/${{ env.ECR_REPO_NAME }}:backend-$IMAGE_TAG .
+            
+            docker tag $ECR_REGISTRY/${{ env.ECR_REPO_NAME }}:backend-$IMAGE_TAG $ECR_REGISTRY/${{ env.ECR_REPO_NAME }}:backend-latest
+            
+            docker push $ECR_REGISTRY/${{ env.ECR_REPO_NAME }}:backend-$IMAGE_TAG
+            docker push $ECR_REGISTRY/${{ env.ECR_REPO_NAME }}:backend-latest
+
+        - name: Build & Push Frontend
+          env:
+            ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+            IMAGE_TAG: ${{ steps.date.outputs.date }}
+          run: |
+            cd frontend
+            docker build -t $ECR_REGISTRY/${{ env.ECR_REPO_NAME }}:frontend-$IMAGE_TAG .
+            
+            docker tag $ECR_REGISTRY/${{ env.ECR_REPO_NAME }}:frontend-$IMAGE_TAG $ECR_REGISTRY/${{ env.ECR_REPO_NAME }}:frontend-latest
+            
+            docker push $ECR_REGISTRY/${{ env.ECR_REPO_NAME }}:frontend-$IMAGE_TAG
+            docker push $ECR_REGISTRY/${{ env.ECR_REPO_NAME }}:frontend-latest
 
 
   deploy:
