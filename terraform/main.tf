@@ -16,26 +16,6 @@ resource "aws_ecr_repository" "ecr" {
     }
 }
 
-resource "aws_ecr_repository_policy" "public_policy" {
-    repository = aws_ecr_repository.ecr.name
-    policy = jsonencode({
-        version = "2012-10-17"
-        statement = [
-            {
-                sid = "AllowPull"
-                effect = "Allow"
-                principal = "*"
-                action = [
-                    "ecr:GetDownloadUrlForLayer",
-                    "ecr:BatchGetImage",
-                    "ecr:BatchCheckLayerAvailability",
-                    "ecr:GetRepositoryPolicy"
-                ]
-            }
-        ]
-    })
-}
-
 resource "aws_ecr_lifecycle_policy" "lifecycle" {
   repository = aws_ecr_repository.ecr.name
   policy = jsonencode({
