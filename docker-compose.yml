@@ -4,7 +4,7 @@ services:
     build: ./frontend
     image: dreamdeck-frontend:v1
     ports:
-      - 4200:4200
+      - ${FRONTEND_PORT}:4200
     networks:
       - dreamdeck-network
     restart: unless-stopped

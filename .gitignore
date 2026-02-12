@@ -247,3 +247,6 @@ gradle-app.setting
 # End of https://www.toptal.com/developers/gitignore/api/java,visualstudiocode,angular,intellij,gradle,windows
 
 .env
+
+terraform/.terraform
+terraform/*.lock.hcl
