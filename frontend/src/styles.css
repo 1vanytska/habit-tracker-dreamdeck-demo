@@ -29,8 +29,8 @@ html, body {
   box-sizing: border-box;
   height: 100%;
   font-family: 'Balsamiq Sans', sans-serif;
-  /* background-color: rgb(207, 240, 255); */
-  background-color: rgb(208, 255, 207);
+  background-color: rgb(207, 240, 255);
+  /* background-color: rgb(208, 255, 207); */
 }
 
 app-root {
