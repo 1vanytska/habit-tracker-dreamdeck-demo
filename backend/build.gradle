@@ -48,16 +48,7 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
-}
-
-flyway {
-    driver = 'org.postgresql.Driver'
-    url = 'jdbc:postgresql://localhost:5432/postgres'
-    user = 'postgres'
-    password = '0987'
-    schemas = ['habit_tracker_db_demo']
-    defaultSchema = 'habit_tracker_db_demo'
-    locations = ['filesystem:src/main/resources/db/migration']
+    implementation 'me.paulschwarz:spring-dotenv:4.0.0'
 }
 
 tasks.named('test') {

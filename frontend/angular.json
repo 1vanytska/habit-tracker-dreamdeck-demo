@@ -18,6 +18,7 @@
               "zone.js"
             ],
             "tsConfig": "tsconfig.app.json",
+            "prerender": false,
             "assets": [
               {
                 "glob": "**/*",
@@ -27,11 +28,12 @@
             "styles": [
               "src/styles.css"
             ],
-            "server": "src/main.server.ts",
-            "outputMode": "server",
-            "ssr": {
-              "entry": "src/server.ts"
-            }
+            // "server": "src/main.server.ts",
+            // "outputMode": "server",
+            "ssr": false
+            // "ssr": {
+            //   "entry": "src/server.ts"
+            // }
           },
           "configurations": {
             "production": {

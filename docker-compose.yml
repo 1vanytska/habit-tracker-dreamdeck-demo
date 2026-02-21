@@ -17,14 +17,14 @@ services:
       - ${SERVER_PORT}:8080
     expose:
       - 8080
-    logging:
-      driver: "awslogs"
-      options:
-        awslogs-region: "${AWS_REGION}"
-        awslogs-group: "${APP_NAME}-${COMPOSE_PROFILES}-backend"
-        awslogs-datetime-format: '\[%b %d, %Y %H:%M:%S\]'
-        tag: "{{.Name}}/{{.ID}}"
-        awslogs-create-group: "true"
+    # logging:
+    #   driver: "awslogs"
+    #   options:
+    #     awslogs-region: "${AWS_REGION}"
+    #     awslogs-group: "${APP_NAME}-${COMPOSE_PROFILES}-backend"
+    #     awslogs-datetime-format: '\[%b %d, %Y %H:%M:%S\]'
+    #     tag: "{{.Name}}/{{.ID}}"
+    #     awslogs-create-group: "true"
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://${DB_HOST}:${DB_PORT}/${POSTGRES_DB}
       SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER}
@@ -32,6 +32,8 @@ services:
     networks:
       - dreamdeck-network
     restart: unless-stopped
+    env_file:
+      - .env
     depends_on:
       - postgres
 

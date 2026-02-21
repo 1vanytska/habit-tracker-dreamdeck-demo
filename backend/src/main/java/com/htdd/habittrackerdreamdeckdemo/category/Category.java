@@ -19,6 +19,6 @@ public class Category {
     private UUID id;
 
     @Column
-    // (nullable = false)
+    (nullable = false)
     private String name;
 }
