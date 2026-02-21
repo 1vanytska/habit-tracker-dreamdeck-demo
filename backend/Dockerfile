@@ -5,5 +5,9 @@ COPY src ./src
 RUN gradle bootJar -x test
 
 FROM eclipse-temurin:21-jre-alpine-3.23 AS production
-COPY --from=build /app/build/libs/*.jar app/app.jar
+RUN addgroup -S spring && adduser -S spring -G spring
+WORKDIR /app
+COPY --from=build --chown=spring:spring /app/build/libs/*.jar app.jar
+USER spring
+EXPOSE 8080
 ENTRYPOINT ["java","-jar","/app/app.jar"]

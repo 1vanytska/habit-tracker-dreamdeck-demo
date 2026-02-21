@@ -4,42 +4,53 @@ services:
     build: ./frontend
     image: dreamdeck-frontend:v1
     ports:
-      - 80:80
-    expose:
-      - 80
+      - ${FRONTEND_PORT}:4200
     networks:
       - dreamdeck-network
+    restart: unless-stopped
 
   dreamdeck-backend:
     container_name: dreamdeck-backend
     build: ./backend
     image: dreamdeck-backend:v1
     ports:
-      - 8080:8080
+      - ${SERVER_PORT}:8080
     expose:
       - 8080
+    # logging:
+    #   driver: "awslogs"
+    #   options:
+    #     awslogs-region: "${AWS_REGION}"
+    #     awslogs-group: "${APP_NAME}-${COMPOSE_PROFILES}-backend"
+    #     awslogs-datetime-format: '\[%b %d, %Y %H:%M:%S\]'
+    #     tag: "{{.Name}}/{{.ID}}"
+    #     awslogs-create-group: "true"
     environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/habit-tracker-db-demo
-      SPRING_DATASOURCE_USERNAME: postgres
-      SPRING_DATASOURCE_PASSWORD: 0987
+      SPRING_DATASOURCE_URL: jdbc:postgresql://${DB_HOST}:${DB_PORT}/${POSTGRES_DB}
+      SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER}
+      SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD}
     networks:
       - dreamdeck-network
+    restart: unless-stopped
+    env_file:
+      - .env
     depends_on:
       - postgres
 
   postgres:
     container_name: dreamdeck-db
-    image: 'postgres:16-alpine'
+    image: 'postgres:17-alpine'
     environment:
-      - 'POSTGRES_USER=postgres'
-      - 'POSTGRES_PASSWORD=0987'
-      - 'POSTGRES_DB=habit-tracker-db-demo'
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
     ports:
-      - '5432:5432'
+      - '${DB_PORT}:5432'
     networks:
       - dreamdeck-network
     volumes:
       - pg_data:/var/lib/postgresql/data
+    restart: unless-stopped
 
 networks:
   dreamdeck-network:
