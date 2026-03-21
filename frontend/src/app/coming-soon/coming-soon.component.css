@@ -1,0 +1,120 @@
+.coming-soon-container {
+  background-color: #f6feff;
+  border-radius: 20px;
+  padding: 2rem;
+  box-shadow: 0 4px 15px rgba(20, 123, 160, 0.1);
+  flex: 1;
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 60vh;
+}
+
+.coming-soon-content {
+  text-align: center;
+  max-width: 600px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.icon-container {
+  margin-bottom: 0.5rem;
+  animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-12px); }
+}
+
+.coming-soon-title {
+  color: #147ba0;
+  font-size: 2.5rem;
+  font-weight: 800;
+  margin-bottom: 1rem;
+  letter-spacing: -0.5px;
+}
+
+.coming-soon-description {
+  color: #5d7b89;
+  font-size: 1.1rem;
+  line-height: 1.6;
+  margin-bottom: 2.5rem;
+}
+
+.features-preview {
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+  margin-bottom: 2.5rem;
+  width: 100%;
+  flex-wrap: wrap;
+}
+
+.feature-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 1rem 1.2rem;
+  background: #ffffff;
+  border-radius: 16px;
+  min-width: 110px;
+  box-shadow: 0 4px 10px rgba(20, 123, 160, 0.05);
+  border: 1px solid transparent;
+  transition: all 0.3s ease;
+}
+
+.feature-item:hover {
+  transform: translateY(-5px);
+  border-color: #8fc2d5;
+  box-shadow: 0 8px 20px rgba(20, 123, 160, 0.15);
+}
+
+.feature-icon {
+  font-size: 2rem;
+  margin-bottom: 0.2rem;
+}
+
+.feature-item span {
+  color: #147ba0;
+  font-weight: 700;
+  font-size: 0.9rem;
+  text-align: center;
+}
+
+.progress-container {
+  width: 100%;
+  max-width: 400px;
+}
+
+.progress-bar {
+  width: 100%;
+  height: 10px;
+  background: #e0f4ff;
+  border-radius: 999px;
+  overflow: hidden;
+  margin-bottom: 0.8rem;
+}
+
+.progress-fill {
+  height: 100%;
+  width: 75%;
+  background: linear-gradient(90deg, #8fc2d5, #147ba0);
+  border-radius: 999px;
+  animation: progressLoad 1.5s ease-out forwards;
+}
+
+@keyframes progressLoad {
+  from { width: 0%; }
+  to { width: 75%; }
+}
+
+.progress-text {
+  color: #8898aa;
+  font-size: 0.9rem;
+  font-weight: 600;
+}

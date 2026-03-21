@@ -1,32 +1,29 @@
-import { Injectable, Inject, PLATFORM_ID } from '@angular/core'; // <--- Додай Inject та PLATFORM_ID
-import { isPlatformBrowser } from '@angular/common'; // <--- Додай це
+import { Injectable, Inject, PLATFORM_ID } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { Router } from '@angular/router';
 import { AuthResponse, LoginRequest, RegisterRequest } from './auth.model';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  private apiUrl = 'http://localhost:8081/api/auth';
+  private apiUrl = `${environment.apiUrl}/auth`;
   
-  // Початкове значення false, щоб не лізти в localStorage до конструктора
   private isAuthenticatedSubject = new BehaviorSubject<boolean>(false);
   public isAuthenticated$ = this.isAuthenticatedSubject.asObservable();
 
   constructor(
     private http: HttpClient, 
     private router: Router,
-    @Inject(PLATFORM_ID) private platformId: Object // <--- Інжектуємо ID платформи
+    @Inject(PLATFORM_ID) private platformId: Object
   ) {
-    // Перевіряємо токен тільки якщо ми в браузері
     if (isPlatformBrowser(this.platformId)) {
       this.isAuthenticatedSubject.next(this.hasToken());
     }
   }
-
-  // --- Основні дії ---
 
   register(data: RegisterRequest): Observable<AuthResponse> {
     return this.http.post<AuthResponse>(`${this.apiUrl}/register`, data).pipe(
@@ -41,7 +38,6 @@ export class AuthService {
   }
 
   logout(): void {
-    // Виконуємо тільки в браузері
     if (isPlatformBrowser(this.platformId)) {
       const refreshToken = localStorage.getItem('refresh_token');
       if (refreshToken) {
@@ -51,8 +47,6 @@ export class AuthService {
     }
     this.router.navigate(['/login']);
   }
-
-  // --- Робота з токенами (безпечна) ---
 
   private saveTokens(response: AuthResponse): void {
     if (isPlatformBrowser(this.platformId)) {
@@ -74,7 +68,7 @@ export class AuthService {
     if (isPlatformBrowser(this.platformId)) {
       return !!localStorage.getItem('access_token');
     }
-    return false; // На сервері ми завжди "не залогінені"
+    return false;
   }
 
   getAccessToken(): string | null {
@@ -93,9 +87,7 @@ export class AuthService {
 
   refreshToken(): Observable<AuthResponse> {
     const token = this.getRefreshToken();
-    // Якщо токена немає (або ми на сервері), повертаємо помилку або пустий потік
     if (!token) {
-        // Тут можна кинути помилку, яку спіймає інтерцептор
         throw new Error("No refresh token"); 
     }
     
