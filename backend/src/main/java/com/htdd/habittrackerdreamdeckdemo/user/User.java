@@ -33,12 +33,13 @@ public class User implements UserDetails {
     private String displayName;
 
     @Column(nullable = false)
+    @com.fasterxml.jackson.annotation.JsonIgnore
     private String password;
 
     @Column(name = "description")
     private String description;
 
-    @Column(name = "profile_picture")
+    @Column(name = "profile_picture", columnDefinition = "TEXT")
     private String profilePicture;
 
     @Column(name = "registration_date", nullable = false)
@@ -58,36 +59,14 @@ public class User implements UserDetails {
     }
 
     @Override
-    public String getUsername() {
-        return email;
-    }
-
-    public String getRealUsername() {
-        return username;
-    }
+    public boolean isAccountNonExpired() { return true; }
 
     @Override
-    public String getPassword() {
-        return password;
-    }
+    public boolean isAccountNonLocked() { return status != UserStatus.BANNED; }
 
     @Override
-    public boolean isAccountNonExpired() {
-        return true;
-    }
+    public boolean isCredentialsNonExpired() { return true; }
 
     @Override
-    public boolean isAccountNonLocked() {
-        return status != UserStatus.BANNED;
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return status == UserStatus.ACTIVE;
-    }
+    public boolean isEnabled() { return status == UserStatus.ACTIVE; }
 }

@@ -10,10 +10,10 @@ import { LoginRequest } from '../../auth/auth.model';
   standalone: true,
   imports: [CommonModule, FormsModule, RouterLink],
   templateUrl: './login.html',
-  styleUrls: ['../auth-shared.css'] // Спільні стилі
+  styleUrls: ['../auth-shared.css']
 })
 export class Login {
-  loginData: LoginRequest = { email: '', password: '' };
+  loginData: LoginRequest = { login: '', password: '' };
   isLoading = false;
 
   constructor(private authService: AuthService, private router: Router) {}

@@ -10,17 +10,19 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class UserController {
 
-    private final UserRepository userRepository;
+    private final UserService userService;
 
     @GetMapping("/me")
     public ResponseEntity<User> getCurrentUser(@AuthenticationPrincipal User user) {
         return ResponseEntity.ok(user);
     }
 
-    @PatchMapping("/me/description")
-    public ResponseEntity<?> updateDescription(@AuthenticationPrincipal User user, @RequestBody String newDescription) {
-        user.setDescription(newDescription);
-        userRepository.save(user);
-        return ResponseEntity.ok("Description updated");
+    @PutMapping("/me")
+    public ResponseEntity<User> updateProfile(
+            @AuthenticationPrincipal User user,
+            @RequestBody UserProfileUpdateRequest request) {
+
+        User updatedUser = userService.updateUserProfile(user, request);
+        return ResponseEntity.ok(updatedUser);
     }
 }

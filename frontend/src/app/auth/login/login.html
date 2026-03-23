@@ -5,8 +5,8 @@
 
     <form (ngSubmit)="onSubmit()" class="auth-form">
       <div class="form-group">
-        <label for="email">Email</label>
-        <input type="email" id="email" [(ngModel)]="loginData.email" name="email" placeholder="vasyl@example.com" required>
+        <label for="loginInput">Логін</label>
+        <input type="text" id="loginInput" [(ngModel)]="loginData.login" name="login" placeholder="Введіть логін" required>
       </div>
 
       <div class="form-group">

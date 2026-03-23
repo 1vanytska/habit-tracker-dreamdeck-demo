@@ -6,6 +6,7 @@ import { Goal } from './goal/goal';
 import { EditGoal } from './goal/edit-goal/edit-goal';
 import { ComingSoonComponent } from './coming-soon/coming-soon.component';
 import { authGuard } from './auth/auth.guard';
+import { EditProfileComponent } from './user/edit-profile/edit-profile';
 
 export const routes: Routes = [
     { path: 'login', component: Login },
@@ -14,6 +15,7 @@ export const routes: Routes = [
     { path: 'goal/:id', component: Goal, canActivate: [authGuard] },
     { path: 'create-goal', component: EditGoal, canActivate: [authGuard] },
     { path: 'edit-goal/:id', component: EditGoal, canActivate: [authGuard] },
+    { path: 'edit-profile', component: EditProfileComponent, canActivate: [authGuard] },
     { path: 'coming-soon', component: ComingSoonComponent, canActivate: [authGuard] },
     { path: '', redirectTo: 'login', pathMatch: 'full' },
     { path: '**', redirectTo: 'coming-soon' }

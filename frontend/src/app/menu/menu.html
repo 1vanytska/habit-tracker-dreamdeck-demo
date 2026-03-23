@@ -1,8 +1,9 @@
 <nav class="menu-panel">
   <div class="user-info">
-    <img src="assets/user.svg" alt="Користувач" class="avatar" />
-    <span class="nickname">Користувач</span>
-     <span class="user-description">Цілеспрямована та невпинна</span>
+    <img [src]="userProfile?.profilePicture ? userProfile?.profilePicture : defaultAvatar" alt="Користувач"
+      class="avatar clickable-avatar" [routerLink]="['/edit-profile']" title="Редагувати профіль" />
+    <span class="nickname">{{ userProfile?.username || 'Завантаження...' }}</span>
+    <span class="user-description">{{ userProfile?.description || 'Додайте опис у профілі' }}</span>
   </div>
 
   <hr class="divider" />

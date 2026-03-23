@@ -1,0 +1,48 @@
+@if (isLoading) {
+<div style="text-align: center; padding: 50px; color: var(--primary-blue);">
+  <h3>Завантаження профілю...</h3>
+</div>
+} @else {
+<div class="edit-profile-container">
+
+  <h2 class="page-title">Налаштування профілю</h2>
+
+  <form class="edit-form" (ngSubmit)="saveProfile()">
+
+    <div class="image-upload-section">
+      <div class="image-placeholder" (click)="fileInput.click()">
+        <img [src]="currentImageDisplay" alt="Profile picture" class="current-image">
+        <div class="upload-overlay">
+          <span>Оновити фото</span>
+        </div>
+      </div>
+      <input #fileInput type="file" style="display: none" accept="image/*" (change)="onFileSelected($event)">
+    </div>
+
+    <div class="form-group">
+      <label for="username" class="form-label">Ім'я користувача (Нікнейм)</label>
+      <input type="text" id="username" class="form-input" [(ngModel)]="userProfile.username" name="username"
+        placeholder="Введіть ваш нікнейм" required>
+    </div>
+
+    <div class="form-group">
+      <label for="email" class="form-label">Email адреса</label>
+      <input type="email" id="email" class="form-input" [(ngModel)]="userProfile.email" name="email" disabled
+        title="Email не можна змінити">
+    </div>
+
+    <div class="form-group">
+      <label for="bio" class="form-label">Про себе</label>
+      <textarea id="bio" class="form-input form-textarea" rows="4" [(ngModel)]="userProfile.description"
+        name="description" placeholder="Розкажіть трохи про себе та свої цілі"></textarea>
+    </div>
+
+    <div class="actions-container">
+      <button type="submit" class="btn btn-primary save-btn">
+        Зберегти зміни
+      </button>
+    </div>
+
+  </form>
+</div>
+}

@@ -30,6 +30,20 @@
   margin-bottom: 0.5rem;
 }
 
+.clickable-avatar {
+  cursor: pointer;
+  transition: transform 0.2s ease, filter 0.2s ease;
+}
+
+.clickable-avatar:hover {
+  transform: scale(1.08);
+  filter: drop-shadow(0 4px 8px rgba(20, 123, 160, 0.3));
+}
+
+.clickable-avatar:active {
+  transform: scale(0.95);
+}
+
 .nickname {
   font-size: 1.5rem;
   font-weight: bold;

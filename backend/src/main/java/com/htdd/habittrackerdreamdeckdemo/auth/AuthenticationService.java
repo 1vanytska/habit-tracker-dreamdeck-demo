@@ -25,8 +25,12 @@ public class AuthenticationService {
 
     public AuthenticationResponse register(RegisterRequest request) {
         if (userRepository.existsByEmail(request.getEmail())) {
-            throw new RuntimeException("Email already exists");
+            throw new RuntimeException("Цей Email вже зареєстровано");
         }
+        if (userRepository.existsByUsername(request.getUsername())) {
+            throw new RuntimeException("Цей логін вже зайнятий");
+        }
+
         var user = User.builder()
                 .username(request.getUsername())
                 .email(request.getEmail())
@@ -44,13 +48,19 @@ public class AuthenticationService {
 
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
         authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
+                new UsernamePasswordAuthenticationToken(request.getLogin(), request.getPassword())
         );
-        var user = userRepository.findByEmail(request.getEmail()).orElseThrow();
+
+        var user = userRepository.findByEmailOrUsername(request.getLogin(), request.getLogin())
+                .orElseThrow(() -> new RuntimeException("Користувача не знайдено"));
+
         var jwtToken = jwtService.generateToken(user);
         var refreshToken = createRefreshToken(user);
 
-        return AuthenticationResponse.builder().accessToken(jwtToken).refreshToken(refreshToken.getToken()).build();
+        return AuthenticationResponse.builder()
+                .accessToken(jwtToken)
+                .refreshToken(refreshToken.getToken())
+                .build();
     }
 
     public AuthenticationResponse refreshToken(String requestRefreshToken) {
