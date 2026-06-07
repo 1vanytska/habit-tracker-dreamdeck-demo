@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -10,6 +10,7 @@ import { AuthService } from '../../auth/auth.service';
   standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './edit-profile.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./edit-profile.css']
 })
 export class EditProfileComponent implements OnInit {

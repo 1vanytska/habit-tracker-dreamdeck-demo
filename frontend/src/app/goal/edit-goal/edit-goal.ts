@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -12,6 +12,7 @@ import { Category } from '../../category/category.model';
   standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './edit-goal.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './edit-goal.css'
 })
 export class EditGoal implements OnInit {

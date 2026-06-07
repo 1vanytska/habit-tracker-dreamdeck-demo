@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common'; 
 import { FormsModule } from '@angular/forms'; 
 import { ActivatedRoute, Router } from '@angular/router';
@@ -21,6 +21,7 @@ interface CalendarDay {
   standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './goal.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './goal.css'
 })
 export class Goal implements OnInit {

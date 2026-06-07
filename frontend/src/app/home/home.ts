@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { Goal } from '../goal/goal.model';
 import { GoalService } from '../goal/goal.service';
@@ -7,6 +7,7 @@ import { GoalService } from '../goal/goal.service';
   selector: 'app-home',
   imports: [RouterLink],
   templateUrl: './home.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './home.css'
 })
 

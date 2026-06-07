@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { UserService, UserProfile } from '../user/user.service';
@@ -8,6 +8,7 @@ import { UserService, UserProfile } from '../user/user.service';
   standalone: true,
   imports: [RouterLink, CommonModule],
   templateUrl: './menu.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './menu.css'
 })
 export class Menu implements OnInit {

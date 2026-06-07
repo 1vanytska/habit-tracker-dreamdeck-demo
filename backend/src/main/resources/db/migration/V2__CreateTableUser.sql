@@ -11,6 +11,3 @@ CREATE TABLE IF NOT EXISTS app_user
     role TEXT NOT NULL,
     status TEXT NOT NULL
 );
-
-INSERT INTO app_user (id, email, username, password, registration_date, role, status)
-VALUES ('a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11', 'test@test.com', 'TestUser', 'password', NOW(), 'USER', 'ACTIVE');
