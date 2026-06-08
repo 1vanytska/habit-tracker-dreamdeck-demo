@@ -1,0 +1,39 @@
+<div class="edit-profile-container">
+  <h2 class="page-title">Управління категоріями</h2>
+
+  <form class="edit-form" (ngSubmit)="saveCategory()" autocomplete="off">
+    <div class="form-group">
+      <label for="categoryName" class="form-label">Нова категорія</label>
+      <input 
+        type="text" 
+        id="categoryName" 
+        class="form-input" 
+        [(ngModel)]="categoryName" 
+        name="categoryName"
+        placeholder="Наприклад: Спорт, Читання, Фінанси" 
+        autocomplete="off"
+        required>
+    </div>
+
+    <div class="actions-container">
+      <button type="button" class="btn btn-secondary" (click)="cancel()">
+        Назад
+      </button>
+      <button type="submit" class="btn btn-primary save-btn" [disabled]="isSaving || !categoryName.trim()">
+        {{ isSaving ? 'Збереження...' : 'Додати' }}
+      </button>
+    </div>
+  </form>
+
+  <div class="categories-list-section" *ngIf="categories.length > 0">
+    <h3 class="list-title">Ваші категорії</h3>
+    <ul class="categories-list">
+      <li *ngFor="let cat of categories" class="category-item">
+        <span class="category-name">{{ cat.name }}</span>
+        <button class="btn-delete" (click)="deleteCategory(cat.id)" title="Видалити">
+          ✕
+        </button>
+      </li>
+    </ul>
+  </div>
+</div>

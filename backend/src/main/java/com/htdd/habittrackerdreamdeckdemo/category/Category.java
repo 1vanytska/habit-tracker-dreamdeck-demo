@@ -20,4 +20,7 @@ public class Category {
 
     @Column(nullable = false)
     private String name;
+
+    @Column(name = "user_id", nullable = false)
+    private UUID userId;
 }

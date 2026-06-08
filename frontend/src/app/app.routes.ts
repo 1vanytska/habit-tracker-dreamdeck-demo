@@ -4,6 +4,7 @@ import { Register } from './auth/register/register';
 import { Home } from './home/home';
 import { Goal } from './goal/goal';
 import { EditGoal } from './goal/edit-goal/edit-goal';
+import { CategoryFormComponent } from './category/category-form/category-form';
 import { ComingSoonComponent } from './coming-soon/coming-soon.component';
 import { authGuard } from './auth/auth.guard';
 import { EditProfileComponent } from './user/edit-profile/edit-profile';
@@ -16,6 +17,7 @@ export const routes: Routes = [
     { path: 'create-goal', component: EditGoal, canActivate: [authGuard] },
     { path: 'edit-goal/:id', component: EditGoal, canActivate: [authGuard] },
     { path: 'edit-profile', component: EditProfileComponent, canActivate: [authGuard] },
+    { path: 'categories/new', component: CategoryFormComponent, canActivate: [authGuard] },
     { path: 'coming-soon', component: ComingSoonComponent, canActivate: [authGuard] },
     { path: '', redirectTo: 'login', pathMatch: 'full' },
     { path: '**', redirectTo: 'coming-soon' }

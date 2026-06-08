@@ -6,6 +6,7 @@ import { GoalService } from '../goal.service';
 import { Goal } from '../goal.model';
 import { CategoryService } from '../../category/category.service';
 import { Category } from '../../category/category.model';
+import { UserService } from '../../user/user.service';
 
 @Component({
   selector: 'app-edit-goal',
@@ -19,7 +20,7 @@ export class EditGoal implements OnInit {
 
   goal: Goal = {
     goalId: '',
-    userId: 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11',
+    userId: '',
     title: '',
     picture: null,
     description: '',
@@ -42,6 +43,7 @@ export class EditGoal implements OnInit {
   constructor(
     private goalService: GoalService,
     private categoryService: CategoryService,
+    private userService: UserService,
     private route: ActivatedRoute,
     private router: Router
   ) { }
@@ -55,7 +57,18 @@ export class EditGoal implements OnInit {
       this.loadGoal(id);
     } else {
       this.isEditMode = false;
-      this.isLoading = false;
+      this.userService.getCurrentUser().subscribe({
+        next: (user) => {
+          if (user.id) {
+            this.goal.userId = user.id;
+          }
+          this.isLoading = false;
+        },
+        error: (err) => {
+          console.error('Не вдалося завантажити користувача:', err);
+          this.isLoading = false;
+        }
+      });
     }
   }
 
@@ -87,6 +100,10 @@ export class EditGoal implements OnInit {
   saveGoal(): void {
     console.log('Спроба зберегти ціль...', this.goal);
 
+    if (!this.goal.userId) {
+      alert('Помилка: Не вдалося визначити користувача. Спробуйте оновити сторінку.');
+      return;
+    }
     if (!this.goal.title.trim()) {
       alert('Помилка: Введіть назву цілі!');
       return;
