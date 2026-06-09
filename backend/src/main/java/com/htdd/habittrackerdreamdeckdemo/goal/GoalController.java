@@ -22,8 +22,10 @@ public class GoalController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> getGoalById(@PathVariable UUID id) {
-        return ResponseEntity.ok(goalService.getGoalById(id));
+    public ResponseEntity<Goal> getGoalById(@PathVariable UUID id) {
+        return goalService.getGoalById(id)
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @PostMapping

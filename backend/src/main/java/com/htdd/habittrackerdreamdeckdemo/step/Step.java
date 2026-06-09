@@ -26,6 +26,9 @@ public class Step {
     @Column(name = "is_completed", nullable = false)
     private boolean isCompleted;
 
+    @Column(name = "sort_order", nullable = false)
+    private int sortOrder;
+
     @ManyToOne
     @JoinColumn(name = "goal_id", nullable = false)
     @JsonBackReference

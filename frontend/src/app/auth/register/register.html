@@ -1,9 +1,9 @@
 <div class="auth-container page-animate">
   <div class="auth-card">
-    <h2 class="auth-title">Створити акаунт 🚀</h2>
-    <p class="auth-subtitle">Почніть свій шлях до мрій вже сьогодні</p>
+    <h2 class="auth-title">Створити акаунт</h2>
+    <p class="auth-subtitle">Почніть свій шлях вже сьогодні</p>
 
-    <form (ngSubmit)="onSubmit()" class="auth-form">
+    <form (ngSubmit)="onSubmit()" class="auth-form" novalidate>
       <div class="form-group">
         <label for="username">Ім'я користувача (@username)</label>
         <input type="text" id="username" [(ngModel)]="registerData.username" name="username" placeholder="sofiia_dev" required>
@@ -17,6 +17,9 @@
       <div class="form-group">
         <label for="password">Пароль</label>
         <input type="password" id="password" [(ngModel)]="registerData.password" name="password" placeholder="••••••••" required>
+        @if (passwordError) {
+          <div class="form-error">{{ passwordError }}</div>
+        }
       </div>
 
       <div class="form-actions">

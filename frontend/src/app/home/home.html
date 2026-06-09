@@ -22,11 +22,9 @@
                  [class.archived-card]="goal.isArchived"
                  style="cursor: pointer;">
                 
-                @if (goal.picture) {
-                    <img [src]="goal.picture" [alt]="goal.title" class="card-img" />
-                } @else {
-                    <img src="assets/images/placeholder-goal.png" alt="No image" class="card-img" />
-                }
+                <div class="card-img-wrapper">
+                    <img [src]="getGoalImage(goal)" [alt]="goal.title" class="card-img" />
+                </div>
 
                 <div class="card-title">{{ goal.title }}</div>
             </div>

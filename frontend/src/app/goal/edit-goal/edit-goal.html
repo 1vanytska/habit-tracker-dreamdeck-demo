@@ -24,7 +24,7 @@
     <div class="form-group">
       <label for="goalName" class="form-label">Назва цілі</label>
       <input type="text" id="goalName" class="form-input" [(ngModel)]="goal.title" name="title"
-        placeholder="Введіть назву цілі" required>
+        placeholder="Введіть назву цілі" required [maxlength]="GOAL_TITLE_MAX_LENGTH">
     </div>
 
     <div class="form-group">
@@ -40,45 +40,63 @@
       </select>
     </div>
 
-    <div class="form-group">
-      <label for="description" class="form-label">Опис цілі</label>
-      <textarea id="description" class="form-input form-textarea" rows="5" [(ngModel)]="goal.description"
-        name="description" placeholder="Введіть опис цілі"></textarea>
+    <div class="form-row">
+      <div class="form-group col">
+        <label for="startDate" class="form-label">Дата початку</label>
+        <input type="date" id="startDate" class="form-input" [(ngModel)]="goal.startDate" name="startDate" required>
+      </div>
+      <div class="form-group col">
+        <label for="deadline" class="form-label">Дедлайн</label>
+        <input type="date" id="deadline" class="form-input" [(ngModel)]="goal.deadline" name="deadline"
+          [min]="goal.startDate" required>
+      </div>
     </div>
 
-    <div class="form-group col" style="flex: 1;">
-        <label for="startDate" class="form-label">Дата початку</label>
-        <input 
-            type="date" 
-            id="startDate" 
-            class="form-input" 
-            [(ngModel)]="goal.startDate" 
-            name="startDate" 
-            required>
-      </div>
+    <div class="form-group">
+      <label for="description" class="form-label">Опис цілі</label>
+      <textarea id="description" class="form-input form-textarea" rows="3" [(ngModel)]="goal.description"
+        name="description" placeholder="Введіть опис цілі" [maxlength]="GOAL_DESCRIPTION_MAX_LENGTH"></textarea>
+    </div>
 
-      <div class="form-group col" style="flex: 1;">
-        <label for="deadline" class="form-label">Дедлайн</label>
-        <input 
-            type="date" 
-            id="deadline" 
-            class="form-input" 
-            [(ngModel)]="goal.deadline" 
-            name="deadline" 
-            [min]="goal.startDate"
-            required>
+    <div class="form-group steps-section">
+      <div class="steps-header">
+        <label class="form-label">Кроки до цілі</label>
+        <button type="button" class="btn btn-add-step" (click)="addStep()">+ Додати крок</button>
       </div>
+      <p class="steps-hint">Перетягніть крок за ручку ⋮⋮, щоб змінити порядок</p>
+
+      @if (goal.steps.length === 0) {
+      <p class="steps-empty">Кроків ще немає. Додайте їх вручну.</p>
+      }
+
+      <div class="steps-list">
+        @for (step of goal.steps; track trackStep($index, step); let i = $index) {
+        <div class="step-item"
+          [class.step-dragging]="draggedStepIndex === i"
+          [class.step-drag-over]="dragOverIndex === i"
+          draggable="true"
+          (dragstart)="onStepDragStart(i)"
+          (dragover)="onStepDragOver($event, i)"
+          (dragleave)="onStepDragLeave()"
+          (drop)="onStepDrop($event, i)"
+          (dragend)="onStepDragEnd()">
+          <span class="drag-handle" title="Перетягнути">⋮⋮</span>
+          <input type="text" class="form-input step-input" [(ngModel)]="step.description"
+            [name]="'step-' + i" placeholder="Опис кроку" maxlength="120">
+          <button type="button" class="btn btn-remove-step" (click)="removeStep(i)" title="Видалити">✕</button>
+        </div>
+        }
+      </div>
+    </div>
 
     <div class="actions-container">
-      
-      <button type="submit" class="btn btn-primary save-btn" 
-        [disabled]="goal.isArchived" 
-        [class.btn-disabled-style]="goal.isArchived">
-        {{ isEditMode ? 'Зберегти зміни' : 'Створити ціль' }}
+      <button type="submit" class="btn btn-primary save-btn"
+        [disabled]="goal.isArchived || isSaving"
+        [class.btn-disabled-style]="goal.isArchived || isSaving">
+        {{ isSaving ? 'Збереження...' : (isEditMode ? 'Зберегти зміни' : 'Створити ціль') }}
       </button>
 
       @if (isEditMode) {
-        
         @if (goal.isArchived) {
           <button type="button" class="btn btn-success unarchive-btn" (click)="unarchiveGoal()">
             Розархівувати ціль
@@ -88,7 +106,6 @@
             Архівувати ціль
           </button>
         }
-
       }
     </div>
 

@@ -1,12 +1,22 @@
 @if (goal) {
 <div class="goal-detail-container" [class.archived-mode]="goal.isArchived">
   <div class="goal-header">
-    <div class="goal-text">
+    <div class="goal-intro">
       <h1 class="goal-name">{{ goal.title }}</h1>
-      <p class="goal-description" [title]="goal.description || ''">
+      <p class="goal-description">
         {{ goal.description || 'Опис відсутній' }}
       </p>
+    </div>
 
+    <div class="goal-image">
+      @if (goal.picture) {
+      <img [src]="goal.picture" [alt]="goal.title" />
+      } @else {
+      <img src="assets/images/placeholder-goal.png" alt="Заглушка" />
+      }
+    </div>
+
+    <div class="goal-info-section">
       <div class="goal-dates">
         <div class="date-item">
           <label>Дата початку</label>
@@ -22,21 +32,10 @@
         </div>
       </div>
 
-      <div class="goal-categories">
+      <div class="goal-info-footer">
         <div class="goal-category-badge">{{ categoryName }}</div>
-        </div>
-
-      <div class="goal-meta">
-        <button class="btn edit-goal-btn" (click)="goToEdit()">Редагувати</button>
+        <button type="button" class="btn edit-goal-btn" (click)="goToEdit()">Редагувати</button>
       </div>
-    </div>
-
-    <div class="goal-image">
-      @if (goal.picture) {
-      <img [src]="goal.picture" [alt]="goal.title" />
-      } @else {
-      <img src="assets/images/placeholder-goal.png" alt="Заглушка" />
-      }
     </div>
   </div>
 
@@ -47,21 +46,58 @@
 
   <div class="steps-section">
     <div class="section-header">
-      <h2>Steps</h2>
-      <button class="btn add-step-btn" (click)="startAddingStep()">+</button>
+      <h2>Кроки</h2>
+      <div class="steps-actions">
+        <button type="button" class="btn ai-steps-btn" (click)="requestAiSteps()" [disabled]="isAiLoading">
+          {{ isAiLoading ? 'AI...' : 'AI кроки' }}
+        </button>
+        <button type="button" class="btn add-step-btn" (click)="startAddingStep()">+</button>
+      </div>
     </div>
+
+    <p class="steps-hint">Перетягніть крок за ⋮⋮, щоб змінити порядок</p>
+
+    @if (showAiStepsSuggestion && aiStepsSuggestion) {
+    <div class="ai-steps-panel">
+      <div class="ai-steps-header">
+        <span>AI-рекомендація кроків</span>
+        <span class="ai-badge" [class.ai-badge-fallback]="!aiStepsSuggestion.fromAi">
+          {{ aiStepsSuggestion.fromAi ? 'AI' : 'Локальна' }}
+        </span>
+      </div>
+      <ul class="ai-steps-list">
+        @for (step of aiStepsSuggestion.steps; track $index) {
+        <li>{{ step }}</li>
+        }
+      </ul>
+      <div class="ai-steps-actions">
+        <button type="button" class="btn-accept" (click)="acceptAiSteps()">Прийняти кроки</button>
+        <button type="button" class="btn-reject" (click)="rejectAiSteps()">Відхилити</button>
+      </div>
+    </div>
+    }
 
     <ul class="steps-list">
       @for (step of goal.steps; track step.stepId; let i = $index) {
-      <li [class.step-completed]="step.isCompleted">
+      <li class="step-row"
+        [class.step-completed]="step.isCompleted"
+        [class.step-dragging]="draggedStepIndex === i"
+        [class.step-drag-over]="dragOverIndex === i"
+        draggable="true"
+        (dragstart)="onStepDragStart(i)"
+        (dragover)="onStepDragOver($event, i)"
+        (dragleave)="onStepDragLeave()"
+        (drop)="onStepDrop($event, i)"
+        (dragend)="onStepDragEnd()">
 
+        <span class="drag-handle" title="Перетягнути">⋮⋮</span>
         <input type="checkbox" [checked]="step.isCompleted" (change)="toggleStep(step.stepId, i)" />
 
         <span [class.step-text-done]="step.isCompleted" [class.step-text]="!step.isCompleted">
           {{ step.description }}
         </span>
 
-        <button class="delete-step-btn" (click)="deleteStep(step.stepId, i)">✕</button>
+        <button type="button" class="delete-step-btn" (click)="deleteStep(step.stepId, i)">✕</button>
       </li>
       }
 
@@ -69,12 +105,13 @@
       <li class="new-step-row">
         <div class="fake-checkbox"></div>
 
-        <input type="text" class="new-step-input" [(ngModel)]="newStepDescription" [placeholder]="aiSuggestion"
+        <input type="text" class="new-step-input" [(ngModel)]="newStepDescription"
+          placeholder="Введіть опис кроку"
           (keyup.enter)="saveNewStep()" autoFocus />
 
         <div class="new-step-actions">
-          <button class="save-btn" (click)="saveNewStep()">✔</button>
-          <button class="cancel-btn" (click)="cancelAddingStep()">✕</button>
+          <button type="button" class="save-btn" (click)="saveNewStep()">✔</button>
+          <button type="button" class="cancel-btn" (click)="cancelAddingStep()">✕</button>
         </div>
       </li>
       }

@@ -57,10 +57,10 @@ class AuthenticationServiceTest {
         registerRequest = new RegisterRequest();
         registerRequest.setUsername("testUser");
         registerRequest.setEmail("test@example.com");
-        registerRequest.setPassword("plainPassword");
+        registerRequest.setPassword("plainPassword!");
 
         authRequest = new AuthenticationRequest();
-        authRequest.setEmail("test@example.com");
+        authRequest.setLogin("test@example.com");
         authRequest.setPassword("plainPassword");
 
         validRefreshToken = RefreshToken.builder()
@@ -86,8 +86,8 @@ class AuthenticationServiceTest {
         assertEquals("mocked-jwt-token", response.getAccessToken());
         assertEquals(validRefreshToken.getToken(), response.getRefreshToken());
 
-        verify(userRepository, times(1)).save(any(User.class));
-        verify(passwordEncoder, times(1)).encode("plainPassword");
+        verify(userRepository, times(2)).save(any(User.class));
+        verify(passwordEncoder, times(1)).encode("plainPassword!");
     }
 
     @Test
@@ -98,13 +98,14 @@ class AuthenticationServiceTest {
             authenticationService.register(registerRequest);
         });
 
-        assertEquals("Email already exists", exception.getMessage());
+        assertEquals("Цей Email вже зареєстровано", exception.getMessage());
         verify(userRepository, never()).save(any(User.class));
     }
 
     @Test
     void authenticate_Positive_ShouldReturnTokens_WhenCredentialsAreValid() {
-        when(userRepository.findByEmail(authRequest.getEmail())).thenReturn(Optional.of(mockUser));
+        when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class))).thenReturn(null);
+        when(userRepository.findByEmailOrUsername(authRequest.getLogin(), authRequest.getLogin())).thenReturn(Optional.of(mockUser));
         when(jwtService.generateToken(mockUser)).thenReturn("mocked-jwt-token");
         when(refreshTokenRepository.save(any(RefreshToken.class))).thenReturn(validRefreshToken);
 

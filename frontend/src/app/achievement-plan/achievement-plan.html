@@ -1,0 +1,55 @@
+<div class="plan-page">
+  <div class="plan-header">
+    <h1>План досягнень</h1>
+    <p>
+      Ваша стежинка від цілі до цілі. Встановіть пріоритет — що важливіше зараз,
+      і рухайтесь по шляху крок за кроком.
+    </p>
+  </div>
+
+  @if (isLoading) {
+  <p class="plan-loading">Завантаження стежинки...</p>
+  } @else if (trailGoals.length === 0) {
+  <div class="plan-empty">
+    <p>У вас ще немає активних цілей для плану.</p>
+    <a routerLink="/create-goal" class="plan-btn">Створити першу ціль</a>
+  </div>
+  } @else {
+  <div class="trail">
+    <div class="trail-line" aria-hidden="true"></div>
+
+    @for (goal of trailGoals; track goal.goalId; let i = $index) {
+    <div class="trail-step" [class.trail-step-right]="i % 2 === 1">
+      <div class="trail-node">
+        <div class="priority-ring">
+          <span class="priority-num">{{ goal.priority }}</span>
+        </div>
+
+        <div class="trail-card">
+          <div class="trail-card-top">
+            <img [src]="getGoalImage(goal)" [alt]="goal.title" class="trail-thumb">
+            <div class="trail-card-text">
+              <h3>{{ goal.title }}</h3>
+              <p>{{ goal.description || 'Без опису' }}</p>
+            </div>
+          </div>
+
+          <div class="trail-meta">
+            <span class="trail-deadline">Дедлайн: {{ goal.deadline | date:'dd.MM.yyyy' }}</span>
+            <span class="trail-days" [class.urgent]="getDaysLeft(goal.deadline) < 3">
+              {{ getDaysLeft(goal.deadline) }} дн.
+            </span>
+          </div>
+
+          <div class="trail-actions">
+            <button type="button" class="prio-btn" (click)="moveUp(i)" [disabled]="i === 0" title="Вище пріоритет">↑</button>
+            <button type="button" class="prio-btn" (click)="moveDown(i)" [disabled]="i === trailGoals.length - 1" title="Нижче пріоритет">↓</button>
+            <a [routerLink]="['/goal', goal.goalId]" class="trail-link">До цілі →</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    }
+  </div>
+  }
+</div>

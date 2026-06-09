@@ -1,0 +1,58 @@
+<div class="info-page contacts-page">
+  <div class="info-hero">
+    <div class="hero-icon">✉️</div>
+    <h1>Контакти</h1>
+    <p class="lead">
+      Маєте питання, ідею для покращення або знайшли помилку? Напишіть нам —
+      ми раді зворотному зв'язку.
+    </p>
+  </div>
+
+  <div class="contacts-layout">
+    <section class="info-card contact-details">
+      <h2>Як з нами зв'язатися</h2>
+      <div class="contact-row">
+        <span class="contact-label">Email</span>
+        <a href="mailto:dreamdesk.support@example.com">dreamdesk.support@example.com</a>
+      </div>
+      <div class="contact-row">
+        <span class="contact-label">GitHub</span>
+        <span>habit-tracker-dreamdeck-demo</span>
+      </div>
+      <div class="contact-row">
+        <span class="contact-label">Години відповіді</span>
+        <span>Пн–Пт, 10:00 – 18:00</span>
+      </div>
+      <p class="contact-note">
+        Це демо-проєкт для навчання. Форма нижче імітує відправку повідомлення.
+      </p>
+    </section>
+
+    <section class="info-card contact-form-card">
+      <h2>Написати повідомлення</h2>
+
+      @if (sent) {
+      <div class="success-banner">
+        Дякуємо! Ваше повідомлення збережено локально (демо-режим).
+      </div>
+      }
+
+      <form class="contact-form" (ngSubmit)="sendMessage()">
+        <label>
+          Ім'я
+          <input type="text" [(ngModel)]="name" name="name" placeholder="Ваше ім'я" required>
+        </label>
+        <label>
+          Email
+          <input type="email" [(ngModel)]="email" name="email" placeholder="you@email.com" required>
+        </label>
+        <label>
+          Повідомлення
+          <textarea [(ngModel)]="message" name="message" rows="5"
+            placeholder="Опишіть питання або пропозицію" required></textarea>
+        </label>
+        <button type="submit" class="info-btn">Надіслати</button>
+      </form>
+    </section>
+  </div>
+</div>

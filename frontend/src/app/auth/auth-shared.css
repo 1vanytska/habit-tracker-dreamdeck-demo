@@ -8,9 +8,10 @@
 
 .auth-card {
   background: #f6feff;
-  padding: 2rem 2.5rem;   
-  width: 100%;
-  max-width: 400px;
+  padding: 2rem 2.5rem;
+  width: min(100%, 480px);
+  max-width: 480px;
+  min-width: 320px;
   border-radius: 20px;
   box-shadow: 0 10px 40px rgba(20, 123, 160, 0.15);
   text-align: center;
@@ -112,4 +113,11 @@
 
 .auth-footer a:hover {
   text-decoration: underline;
+}
+
+.form-error {
+  margin-top: 0.4rem;
+  color: #c0392b;
+  font-size: 0.85rem;
+  font-weight: 500;
 }

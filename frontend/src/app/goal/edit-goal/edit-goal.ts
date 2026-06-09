@@ -1,28 +1,33 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { GoalService } from '../goal.service';
-import { Goal } from '../goal.model';
+import { Goal, Step } from '../goal.model';
 import { CategoryService } from '../../category/category.service';
 import { Category } from '../../category/category.model';
 import { UserService } from '../../user/user.service';
+import { compressImageFile } from '../../shared/image-compression.utils';
 
 @Component({
   selector: 'app-edit-goal',
   standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './edit-goal.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './edit-goal.css'
 })
 export class EditGoal implements OnInit {
+
+  readonly GOAL_TITLE_MAX_LENGTH = 25;
+  readonly GOAL_DESCRIPTION_MAX_LENGTH = 150;
+  
+  readonly DEFAULT_GOAL_IMAGE = '/assets/images/placeholder-goal.png';
 
   goal: Goal = {
     goalId: '',
     userId: '',
     title: '',
-    picture: null,
+    picture: this.DEFAULT_GOAL_IMAGE,
     description: '',
     categoryId: '',
     isPublic: true,
@@ -31,21 +36,25 @@ export class EditGoal implements OnInit {
     status: 'IN_PROGRESS',
     isArchived: false,
     archivingTime: null,
-
     steps: []
   };
 
-  currentImageDisplay: string = 'assets/images/placeholder-goal.png';
+  currentImageDisplay: string = this.DEFAULT_GOAL_IMAGE;
   isLoading: boolean = true;
+  isSaving: boolean = false;
   isEditMode: boolean = false;
   categories: Category[] = [];
+
+  draggedStepIndex: number | null = null;
+  dragOverIndex: number | null = null;
 
   constructor(
     private goalService: GoalService,
     private categoryService: CategoryService,
     private userService: UserService,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private cdr: ChangeDetectorRef
   ) { }
 
   ngOnInit(): void {
@@ -63,10 +72,12 @@ export class EditGoal implements OnInit {
             this.goal.userId = user.id;
           }
           this.isLoading = false;
+          this.cdr.detectChanges();
         },
         error: (err) => {
           console.error('Не вдалося завантажити користувача:', err);
           this.isLoading = false;
+          this.cdr.detectChanges();
         }
       });
     }
@@ -76,6 +87,7 @@ export class EditGoal implements OnInit {
     this.categoryService.getAllCategories().subscribe({
       next: (data) => {
         this.categories = data;
+        this.cdr.detectChanges();
       },
       error: (err) => console.error('Не вдалося завантажити категорії:', err)
     });
@@ -85,21 +97,84 @@ export class EditGoal implements OnInit {
     this.goalService.getGoalById(id).subscribe({
       next: (data) => {
         this.goal = data;
-        if (this.goal.picture) {
+        if (!this.goal.steps) {
+          this.goal.steps = [];
+        }
+        
+        if (!this.goal.picture || this.goal.picture.trim() === '') {
+          this.currentImageDisplay = this.DEFAULT_GOAL_IMAGE;
+        } else {
           this.currentImageDisplay = this.goal.picture;
         }
+        
         this.isLoading = false;
+        this.cdr.detectChanges();
       },
       error: (err) => {
         console.error('Помилка завантаження:', err);
         this.isLoading = false;
+        this.cdr.detectChanges();
       }
     });
   }
 
-  saveGoal(): void {
-    console.log('Спроба зберегти ціль...', this.goal);
+  private getCategoryName(): string {
+    const found = this.categories.find(c => c.id === this.goal.categoryId);
+    return found ? found.name : '';
+  }
 
+  addStep(): void {
+    this.goal.steps.push({
+      stepId: '',
+      description: '',
+      isCompleted: false
+    });
+    this.cdr.detectChanges();
+  }
+
+  removeStep(index: number): void {
+    this.goal.steps.splice(index, 1);
+    this.cdr.detectChanges();
+  }
+
+  onStepDragStart(index: number): void {
+    this.draggedStepIndex = index;
+  }
+
+  onStepDragOver(event: DragEvent, index: number): void {
+    event.preventDefault();
+    this.dragOverIndex = index;
+  }
+
+  onStepDragLeave(): void {
+    this.dragOverIndex = null;
+  }
+
+  onStepDrop(event: DragEvent, targetIndex: number): void {
+    event.preventDefault();
+    if (this.draggedStepIndex === null || this.draggedStepIndex === targetIndex) {
+      this.resetDragState();
+      return;
+    }
+
+    const steps = [...this.goal.steps];
+    const [moved] = steps.splice(this.draggedStepIndex, 1);
+    steps.splice(targetIndex, 0, moved);
+    this.goal.steps = steps;
+    this.resetDragState();
+    this.cdr.detectChanges();
+  }
+
+  onStepDragEnd(): void {
+    this.resetDragState();
+  }
+
+  private resetDragState(): void {
+    this.draggedStepIndex = null;
+    this.dragOverIndex = null;
+  }
+
+  saveGoal(): void {
     if (!this.goal.userId) {
       alert('Помилка: Не вдалося визначити користувача. Спробуйте оновити сторінку.');
       return;
@@ -108,8 +183,16 @@ export class EditGoal implements OnInit {
       alert('Помилка: Введіть назву цілі!');
       return;
     }
+    if (this.goal.title.trim().length > this.GOAL_TITLE_MAX_LENGTH) {
+      alert(`Помилка: Заголовок не може перевищувати ${this.GOAL_TITLE_MAX_LENGTH} символів.`);
+      return;
+    }
     if (!this.goal.categoryId) {
       alert('Помилка: Виберіть категорію!');
+      return;
+    }
+    if (this.goal.description.trim().length > this.GOAL_DESCRIPTION_MAX_LENGTH) {
+      alert(`Помилка: Опис не може перевищувати ${this.GOAL_DESCRIPTION_MAX_LENGTH} символів.`);
       return;
     }
     if (!this.goal.startDate) {
@@ -125,26 +208,38 @@ export class EditGoal implements OnInit {
       return;
     }
 
+    this.goal.steps = this.goal.steps.filter(s => s.description.trim());
+    
+    if (this.goal.picture === this.DEFAULT_GOAL_IMAGE) {
+      this.goal.picture = null; 
+    }
+
+    this.isSaving = true;
+
     if (this.isEditMode) {
       this.goalService.updateGoal(this.goal.goalId, this.goal).subscribe({
         next: () => {
-          alert('Ціль оновлено!');
-          this.router.navigate(['/home']);
+          this.isSaving = false;
+          this.router.navigate(['/goal', this.goal.goalId]);
         },
         error: (err) => {
           console.error('Помилка оновлення:', err);
-          alert('Не вдалося оновити ціль. Див. консоль.');
+          alert('Не вдалося оновити ціль.');
+          this.isSaving = false;
+          this.cdr.detectChanges();
         }
       });
     } else {
       this.goalService.createGoal(this.goal).subscribe({
-        next: () => {
-          alert('Ціль створено!');
-          this.router.navigate(['/home']);
+        next: (created) => {
+          this.isSaving = false;
+          this.router.navigate(['/goal', created.goalId]);
         },
         error: (err) => {
           console.error('Помилка створення:', err);
-          alert('Не вдалося створити ціль. Див. консоль.');
+          alert('Не вдалося створити ціль.');
+          this.isSaving = false;
+          this.cdr.detectChanges();
         }
       });
     }
@@ -166,19 +261,26 @@ export class EditGoal implements OnInit {
     }
   }
 
-  onFileSelected(event: any): void {
-    const file = event.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-
-      reader.onload = (e: any) => {
-        const base64String = e.target.result;
-
-        this.currentImageDisplay = base64String;
-        this.goal.picture = base64String;
-      };
-
-      reader.readAsDataURL(file);
+  onFileSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
+    if (!file) {
+      return;
     }
+
+    compressImageFile(file)
+      .then((compressed) => {
+        this.currentImageDisplay = compressed;
+        this.goal.picture = compressed;
+        this.cdr.detectChanges();
+      })
+      .catch((err) => {
+        console.error('Помилка стиснення зображення:', err);
+        alert('Не вдалося обробити зображення.');
+      });
+  }
+
+  trackStep(index: number, step: Step): string {
+    return step.stepId || `new-${index}`;
   }
 }

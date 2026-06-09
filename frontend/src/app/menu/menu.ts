@@ -1,6 +1,7 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { NavigationEnd, Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { filter } from 'rxjs';
 import { UserService, UserProfile } from '../user/user.service';
 
 @Component({
@@ -13,9 +14,13 @@ import { UserService, UserProfile } from '../user/user.service';
 })
 export class Menu implements OnInit {
   userProfile: UserProfile | null = null;
-  defaultAvatar: string = '/assets/user.svg'; 
+  defaultAvatar: string = '/assets/user.svg';
+  menuOpen = false;
 
-  constructor(private userService: UserService) {}
+  constructor(
+    private userService: UserService,
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
     this.userService.getCurrentUser().subscribe({
@@ -26,5 +31,19 @@ export class Menu implements OnInit {
         console.error('Не вдалося завантажити дані для меню:', err);
       }
     });
+
+    this.router.events
+      .pipe(filter((event) => event instanceof NavigationEnd))
+      .subscribe(() => {
+        this.menuOpen = false;
+      });
+  }
+
+  toggleMenu(): void {
+    this.menuOpen = !this.menuOpen;
+  }
+
+  closeMenu(): void {
+    this.menuOpen = false;
   }
 }

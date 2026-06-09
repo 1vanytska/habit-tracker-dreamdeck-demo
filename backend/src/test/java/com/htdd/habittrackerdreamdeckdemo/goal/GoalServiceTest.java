@@ -69,6 +69,19 @@ class GoalServiceTest {
     }
 
     @Test
+    void saveGoal_ShouldAssignDefaultPictureWhenMissing() {
+        UUID userId = UUID.randomUUID();
+        Goal goalToSave = new Goal();
+        goalToSave.setUserId(userId);
+        when(goalRepository.save(goalToSave)).thenReturn(goalToSave);
+
+        Goal result = goalService.saveGoal(goalToSave);
+
+        assertNotNull(result.getPicture());
+        assertTrue(result.getPicture().contains("placeholder-goal"));
+    }
+
+    @Test
     void deleteGoalById_Positive_ShouldCallRepositoryDelete() {
         UUID goalId = UUID.randomUUID();
 

@@ -40,4 +40,12 @@ export class GoalService {
   deleteStep(stepId: string): Observable<void> {
     return this.http.delete<void>(`${this.stepsUrl}/${stepId}`);
   }
+
+  reorderSteps(goalId: string, orderedStepIds: string[]): Observable<Step[]> {
+    return this.http.put<Step[]>(`${this.stepsUrl}/goal/${goalId}/reorder`, orderedStepIds);
+  }
+
+  addStepsBatch(goalId: string, descriptions: string[]): Observable<Step[]> {
+    return this.http.post<Step[]>(`${this.stepsUrl}/${goalId}/batch`, descriptions);
+  }
 }

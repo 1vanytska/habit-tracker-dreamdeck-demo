@@ -1,21 +1,37 @@
-<nav class="menu-panel">
-  <div class="user-info">
-    <img [src]="userProfile?.profilePicture ? $safeNavigationMigration(userProfile?.profilePicture) : defaultAvatar" alt="Користувач"
-      class="avatar clickable-avatar" [routerLink]="['/edit-profile']" title="Редагувати профіль" />
-    <span class="nickname">{{ userProfile?.username || 'Завантаження...' }}</span>
-    <span class="user-description">{{ userProfile?.description || 'Додайте опис у профілі' }}</span>
+<div class="menu-wrapper">
+  <div class="profile-section">
+    <div class="user-info">
+      <img [src]="userProfile?.profilePicture || defaultAvatar" alt="Користувач"
+        class="avatar clickable-avatar" [routerLink]="['/edit-profile']" title="Редагувати профіль" />
+      <span class="nickname">{{ userProfile?.username || 'Завантаження...' }}</span>
+      <span class="user-description">{{ userProfile?.description || 'Додайте опис у профілі' }}</span>
+    </div>
+    <hr class="divider profile-divider" />
   </div>
 
-  <hr class="divider" />
+  <nav class="menu-panel" [class.is-open]="menuOpen">
+    <button
+      type="button"
+      class="menu-toggle"
+      (click)="toggleMenu()"
+      [attr.aria-expanded]="menuOpen"
+      aria-controls="menu-body"
+    >
+      Меню
+      <span class="menu-chevron" aria-hidden="true"></span>
+    </button>
 
-  <ul class="menu-list">
-    <li><a routerLink="/home">Мої цілі</a></li>
-    <li><a routerLink="/categories/new">Створити категорію</a></li>
-    <li><a routerLink="/coming-soon">План досягнень</a></li>
-    <li><a routerLink="/coming-soon">Мотиваційна дошка</a></li>
-    <li><a routerLink="/coming-soon">Нагадування</a></li>
-    <li><a routerLink="/coming-soon">Мої нагороди</a></li>
-    <li><a routerLink="/coming-soon">Оцінка прогресу</a></li>
-    <li><a routerLink="/coming-soon">Мій настрій</a></li>
-  </ul>
-</nav>
+    <div id="menu-body" class="menu-body">
+      <ul class="menu-list">
+        <li><a routerLink="/home" (click)="closeMenu()">Мої цілі</a></li>
+        <li><a routerLink="/categories/new" (click)="closeMenu()">Створити категорію</a></li>
+        <li><a routerLink="/achievement-plan" (click)="closeMenu()">План досягнень</a></li>
+        <li><a routerLink="/coming-soon" (click)="closeMenu()">Мотиваційна дошка</a></li>
+        <li><a routerLink="/coming-soon" (click)="closeMenu()">Нагадування</a></li>
+        <li><a routerLink="/coming-soon" (click)="closeMenu()">Мої нагороди</a></li>
+        <li><a routerLink="/coming-soon" (click)="closeMenu()">Оцінка прогресу</a></li>
+        <li><a routerLink="/coming-soon" (click)="closeMenu()">Мій настрій</a></li>
+      </ul>
+    </div>
+  </nav>
+</div>

@@ -65,6 +65,7 @@ public class Goal {
     private LocalDate archivingTime;
 
     @OneToMany(mappedBy = "goal", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OrderBy("sortOrder ASC")
     @JsonManagedReference
     private List<Step> steps = new ArrayList<>();
 

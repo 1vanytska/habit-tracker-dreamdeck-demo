@@ -32,14 +32,15 @@
 
 .image-upload-section {
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  align-items: center;
   margin-bottom: 40px;
 }
 
 .image-placeholder {
-  width: 500px;
+  width: 100%;
+  max-width: 500px;
   height: 280px;
-  max-width: 100%; 
   background-color: #e0e0e0;
   border-radius: 12px;
   overflow: hidden;
@@ -47,14 +48,55 @@
   cursor: pointer;
   box-shadow: 0 4px 10px rgba(0,0,0,0.1);
   border: 3px solid var(--primary-blue);
-  transition: all 0.3s ease;
-}
-
-.image-placeholder:hover {
-  border-color: var(--primary-blue);
+  flex-shrink: 0;
 }
 
 .current-image {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+.default-images-picker {
+  width: 100%;
+  max-width: 500px;
+  margin-top: 1rem;
+}
+
+.picker-label {
+  display: block;
+  font-size: 0.9rem;
+  color: var(--primary-blue);
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+}
+
+.default-images-row {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.default-image-btn {
+  width: 72px;
+  height: 48px;
+  padding: 0;
+  border: 2px solid var(--input-border);
+  border-radius: 8px;
+  overflow: hidden;
+  cursor: pointer;
+  background: white;
+}
+
+.default-image-btn.selected {
+  border-color: var(--primary-blue);
+  box-shadow: 0 0 0 2px rgba(20, 123, 160, 0.25);
+}
+
+.default-image-btn img {
+  display: block;
   width: 100%;
   height: 100%;
   object-fit: cover;
@@ -200,4 +242,283 @@
   gap: 1rem;
   margin-top: 2rem;
   align-items: center;
+}
+
+.ai-section {
+  margin: 1.5rem 0;
+  padding: 1rem;
+  background: linear-gradient(135deg, #e8f7fc 0%, #f0faff 100%);
+  border-radius: 12px;
+  border: 1px dashed var(--secondary-blue);
+}
+
+.btn-ai {
+  background: linear-gradient(135deg, #147ba0, #1a9cc7);
+  color: var(--white);
+  padding: 12px 20px;
+  border: none;
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.2s, transform 0.1s;
+}
+
+.btn-ai:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(20, 123, 160, 0.3);
+}
+
+.btn-ai:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.ai-hint {
+  margin: 0.5rem 0 0;
+  font-size: 0.85rem;
+  color: #666;
+}
+
+.ai-suggestion-panel {
+  margin-bottom: 1.5rem;
+  padding: 1.25rem;
+  background: #fff;
+  border: 2px solid var(--secondary-blue);
+  border-radius: 14px;
+  box-shadow: 0 4px 14px rgba(20, 123, 160, 0.12);
+}
+
+.ai-panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.ai-panel-header h3 {
+  margin: 0;
+  color: var(--primary-blue);
+  font-size: 1.1rem;
+}
+
+.ai-badge {
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 20px;
+  background: var(--primary-blue);
+  color: white;
+}
+
+.ai-badge-fallback {
+  background: #6c757d;
+}
+
+.suggestion-block {
+  padding: 1rem;
+  margin-bottom: 0.75rem;
+  background: #f8fcfe;
+  border-radius: 10px;
+  border: 1px solid var(--input-border);
+}
+
+.suggestion-block:last-child {
+  margin-bottom: 0;
+}
+
+.suggestion-block h4 {
+  margin: 0 0 0.5rem;
+  color: var(--primary-blue);
+  font-size: 0.95rem;
+}
+
+.suggestion-text {
+  margin: 0 0 0.75rem;
+  line-height: 1.5;
+  color: var(--text-dark);
+}
+
+.field-hint {
+  margin-top: 0.4rem;
+  font-size: 0.85rem;
+  color: #647d91;
+}
+
+.suggestion-steps {
+  margin: 0 0 0.75rem;
+  padding-left: 1.25rem;
+  line-height: 1.6;
+}
+
+.suggestion-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.btn-accept {
+  background: #147ba0;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.btn-accept:hover {
+  background: #219a52;
+}
+
+.btn-reject {
+  background: transparent;
+  color: #666;
+  border: 1px solid #ccc;
+  padding: 8px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.btn-reject:hover {
+  background: #f5f5f5;
+}
+
+.steps-section {
+  margin-top: 1rem;
+}
+
+.steps-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.steps-hint {
+  font-size: 0.85rem;
+  color: #777;
+  margin: 0 0 0.75rem;
+}
+
+.suggestion-title {
+  font-size: 1rem;
+  color: #184a6a;
+  font-weight: 700;
+  margin-bottom: 0.75rem;
+}
+
+.steps-empty {
+  color: #999;
+  font-style: italic;
+  margin: 0 0 0.75rem;
+}
+
+.btn-add-step {
+  background: var(--secondary-blue);
+  color: white;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.btn-add-step:hover {
+  background: var(--primary-blue);
+}
+
+.steps-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.step-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem;
+  background: white;
+  border: 2px solid var(--input-border);
+  border-radius: 10px;
+  transition: border-color 0.2s, box-shadow 0.2s, opacity 0.2s;
+}
+
+.step-item.step-dragging {
+  opacity: 0.5;
+  border-style: dashed;
+}
+
+.step-item.step-drag-over {
+  border-color: var(--primary-blue);
+  box-shadow: 0 0 0 2px rgba(20, 123, 160, 0.2);
+}
+
+.drag-handle {
+  cursor: grab;
+  color: var(--primary-blue);
+  font-weight: bold;
+  padding: 0 4px;
+  user-select: none;
+  font-size: 1.1rem;
+}
+
+.drag-handle:active {
+  cursor: grabbing;
+}
+
+.step-input {
+  flex: 1;
+  margin: 0;
+}
+
+.btn-remove-step {
+  background: transparent;
+  border: none;
+  color: var(--danger-color);
+  font-size: 1.1rem;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 6px;
+}
+
+.btn-remove-step:hover {
+  background: #fdeaea;
+}
+
+@media (max-width: 768px) {
+  .edit-goal-container {
+    padding: 1.25rem;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .form-row {
+    flex-direction: column;
+  }
+
+  .image-placeholder {
+    height: 220px;
+  }
+
+  .actions-container {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .save-btn,
+  .archive-btn,
+  .unarchive-btn {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .page-title {
+    font-size: 1.5rem;
+  }
+
+  .step-item {
+    flex-wrap: wrap;
+  }
 }

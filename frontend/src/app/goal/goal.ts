@@ -6,6 +6,8 @@ import { GoalService } from './goal.service';
 import { Goal as GoalModel } from './goal.model';
 import { CategoryService } from '../category/category.service';
 import { NoteService, Note } from './note/note.service';
+import { AiService } from '../ai/ai.service';
+import { StepsSuggestionResponse } from '../ai/ai.model';
 
 interface CalendarDay {
   dayNumber: number | null;
@@ -31,6 +33,7 @@ export class Goal implements OnInit {
   private goalService = inject(GoalService);
   private categoryService = inject(CategoryService);
   private noteService = inject(NoteService);
+  private aiService = inject(AiService);
 
   goal: GoalModel | null = null;
   categoryName: string = 'Завантаження...';
@@ -39,7 +42,13 @@ export class Goal implements OnInit {
 
   isAddingStep: boolean = false;
   newStepDescription: string = '';
-  aiSuggestion: string = '';
+
+  isAiLoading: boolean = false;
+  aiStepsSuggestion: StepsSuggestionResponse | null = null;
+  showAiStepsSuggestion: boolean = false;
+
+  draggedStepIndex: number | null = null;
+  dragOverIndex: number | null = null;
 
   currentDate: Date = new Date();
   displayDate: Date = new Date();
@@ -105,7 +114,6 @@ export class Goal implements OnInit {
   startAddingStep(): void {
     this.isAddingStep = true;
     this.newStepDescription = '';
-    this.generateSmartSuggestion();
   }
 
   cancelAddingStep(): void {
@@ -126,21 +134,102 @@ export class Goal implements OnInit {
     });
   }
 
-  generateSmartSuggestion(): void {
+  requestAiSteps(): void {
     if (!this.goal) return;
-    const title = this.goal.title.toLowerCase();
 
-    if (title.includes('спорт') || title.includes('тренув') || title.includes('біг')) {
-      this.aiSuggestion = 'Купити абонемент у зал / знайти тренера';
-    } else if (title.includes('англійськ') || title.includes('мов')) {
-      this.aiSuggestion = 'Вивчити 10 нових слів сьогодні';
-    } else if (title.includes('книг') || title.includes('чита')) {
-      this.aiSuggestion = 'Прочитати перші 20 сторінок';
-    } else if (title.includes('грош') || title.includes('фінанс')) {
-      this.aiSuggestion = 'Відкласти перші 100 грн';
-    } else {
-      this.aiSuggestion = 'Визначити перший маленький крок...';
+    this.isAiLoading = true;
+    this.aiStepsSuggestion = null;
+    this.showAiStepsSuggestion = false;
+
+    this.aiService.getStepsSuggestion({
+      title: this.goal.title,
+      categoryName: this.categoryName,
+      description: this.goal.description,
+      startDate: this.goal.startDate,
+      deadline: this.goal.deadline,
+      existingSteps: this.goal.steps.map(s => s.description)
+    }).subscribe({
+      next: (suggestion) => {
+        this.aiStepsSuggestion = suggestion;
+        this.showAiStepsSuggestion = true;
+        this.isAiLoading = false;
+      },
+      error: (err) => {
+        console.error('Помилка AI-рекомендації кроків:', err);
+        alert('Не вдалося згенерувати кроки. Спробуйте ще раз.');
+        this.isAiLoading = false;
+      }
+    });
+  }
+
+  acceptAiSteps(): void {
+    if (!this.goal || !this.aiStepsSuggestion) return;
+
+    this.goalService.addStepsBatch(this.goal.goalId, this.aiStepsSuggestion.steps).subscribe({
+      next: (steps) => {
+        this.goal?.steps.push(...steps);
+        this.rejectAiSteps();
+      },
+      error: (err) => {
+        console.error('Помилка додавання кроків:', err);
+        alert('Не вдалося додати кроки.');
+      }
+    });
+  }
+
+  rejectAiSteps(): void {
+    this.showAiStepsSuggestion = false;
+    this.aiStepsSuggestion = null;
+  }
+
+  onStepDragStart(index: number): void {
+    this.draggedStepIndex = index;
+  }
+
+  onStepDragOver(event: DragEvent, index: number): void {
+    event.preventDefault();
+    this.dragOverIndex = index;
+  }
+
+  onStepDragLeave(): void {
+    this.dragOverIndex = null;
+  }
+
+  onStepDrop(event: DragEvent, targetIndex: number): void {
+    event.preventDefault();
+    if (!this.goal || this.draggedStepIndex === null || this.draggedStepIndex === targetIndex) {
+      this.resetDragState();
+      return;
     }
+
+    const steps = [...this.goal.steps];
+    const [moved] = steps.splice(this.draggedStepIndex, 1);
+    steps.splice(targetIndex, 0, moved);
+    this.goal.steps = steps;
+
+    const orderedIds = steps.map(s => s.stepId);
+    this.goalService.reorderSteps(this.goal.goalId, orderedIds).subscribe({
+      next: (reordered) => {
+        if (this.goal) {
+          this.goal.steps = reordered;
+        }
+      },
+      error: (err) => {
+        console.error('Помилка зміни порядку кроків:', err);
+        this.loadGoal(this.goal!.goalId);
+      }
+    });
+
+    this.resetDragState();
+  }
+
+  onStepDragEnd(): void {
+    this.resetDragState();
+  }
+
+  private resetDragState(): void {
+    this.draggedStepIndex = null;
+    this.dragOverIndex = null;
   }
 
   toggleStep(stepId: string, index: number): void {

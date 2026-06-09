@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -10,10 +10,11 @@ import { AuthService } from '../../auth/auth.service';
   standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './edit-profile.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./edit-profile.css']
 })
 export class EditProfileComponent implements OnInit {
+
+  readonly DEFAULT_AVATAR = '/assets/images/user.svg';
 
   userProfile: UserProfile = {
     username: '',
@@ -22,14 +23,15 @@ export class EditProfileComponent implements OnInit {
     profilePicture: null
   };
 
-  currentImageDisplay: string = '/assets/images/placeholder-goal.png';
+  currentImageDisplay: string = this.DEFAULT_AVATAR;
   isLoading: boolean = true;
   isSaving: boolean = false;
 
   constructor(
     private userService: UserService,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private cdr: ChangeDetectorRef
   ) { }
 
   ngOnInit(): void {
@@ -39,16 +41,29 @@ export class EditProfileComponent implements OnInit {
   loadUserProfile(): void {
     this.userService.getCurrentUser().subscribe({
       next: (user) => {
-        this.userProfile = user;
-        if (this.userProfile.profilePicture) {
-          this.currentImageDisplay = this.userProfile.profilePicture;
+        if (!user) {
+          console.warn('Користувач не знайдений');
+          this.currentImageDisplay = this.DEFAULT_AVATAR;
+          this.isLoading = false;
+          this.cdr.detectChanges();
+          return;
         }
+
+        this.userProfile = user;
+        
+        if (!this.userProfile.profilePicture || this.userProfile.profilePicture.trim() === '') {
+          this.userProfile.profilePicture = this.DEFAULT_AVATAR;
+        }
+        
+        this.currentImageDisplay = this.userProfile.profilePicture;
         this.isLoading = false;
+        this.cdr.detectChanges();
       },
       error: (err) => {
         console.error('Помилка завантаження профілю:', err);
         alert('Не вдалося завантажити профіль');
         this.isLoading = false;
+        this.cdr.detectChanges();
       }
     });
   }
@@ -60,17 +75,23 @@ export class EditProfileComponent implements OnInit {
     }
 
     this.isSaving = true;
+    this.cdr.detectChanges();
+
+    const pictureToSave = this.userProfile.profilePicture === this.DEFAULT_AVATAR 
+                          ? null 
+                          : this.userProfile.profilePicture;
 
     const updateData = {
       username: this.userProfile.username,
       description: this.userProfile.description,
-      profilePicture: this.userProfile.profilePicture
+      profilePicture: pictureToSave
     };
 
     this.userService.updateProfile(updateData).subscribe({
       next: () => {
         alert('Профіль успішно оновлено! Оскільки username змінився, будь ласка, увійдіть знову.');
         this.isSaving = false;
+        this.cdr.detectChanges();
         
         this.authService.logout(); 
       },
@@ -78,6 +99,7 @@ export class EditProfileComponent implements OnInit {
         console.error('Помилка оновлення:', err);
         alert(err.error?.message || 'Не вдалося оновити профіль.');
         this.isSaving = false;
+        this.cdr.detectChanges();
       }
     });
   }
@@ -95,6 +117,7 @@ export class EditProfileComponent implements OnInit {
         const base64String = e.target.result;
         this.currentImageDisplay = base64String;
         this.userProfile.profilePicture = base64String;
+        this.cdr.detectChanges();
       };
       reader.readAsDataURL(file);
     }

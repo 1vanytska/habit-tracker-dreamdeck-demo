@@ -24,6 +24,7 @@ public class AuthenticationService {
     private final AuthenticationManager authenticationManager;
 
     public AuthenticationResponse register(RegisterRequest request) {
+        PasswordPolicy.validate(request.getPassword());
         if (userRepository.existsByEmail(request.getEmail())) {
             throw new RuntimeException("Цей Email вже зареєстровано");
         }
@@ -40,7 +41,9 @@ public class AuthenticationService {
                 .registrationDate(java.time.LocalDateTime.now())
                 .build();
         var savedUser = userRepository.save(user);
-        var jwtToken = jwtService.generateToken(user);
+        savedUser.setProfilePicture(DefaultImagePaths.defaultAvatarFor(savedUser.getId()));
+        savedUser = userRepository.save(savedUser);
+        var jwtToken = jwtService.generateToken(savedUser);
         var refreshToken = createRefreshToken(savedUser);
 
         return AuthenticationResponse.builder().accessToken(jwtToken).refreshToken(refreshToken.getToken()).build();
