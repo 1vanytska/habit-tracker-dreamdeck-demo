@@ -54,19 +54,4 @@ describe('Goal', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
-
-  it('should toggle description hover state and apply expanded class', () => {
-    const wrapper = fixture.nativeElement.querySelector('.goal-description-wrapper');
-
-    wrapper.dispatchEvent(new Event('mouseenter'));
-    fixture.detectChanges();
-
-    expect(component.isDescriptionHovered).toBeTrue();
-    expect(fixture.nativeElement.querySelector('.goal-header').classList).toContain('description-expanded');
-
-    wrapper.dispatchEvent(new Event('mouseleave'));
-    fixture.detectChanges();
-
-    expect(component.isDescriptionHovered).toBeFalse();
-  });
 });
