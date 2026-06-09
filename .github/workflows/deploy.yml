@@ -1,0 +1,134 @@
+name: Deploy to AWS
+
+# Деплой на AWS вимкнено на main.
+# Тести й лінтери запускаються в ci.yml при push у main.
+# Щоб увімкнути деплой: розкоментуйте on.push і jobs нижче, додайте secrets у GitHub.
+
+on:
+  workflow_dispatch:
+  # push:
+  #   branches:
+  #     - main
+
+# env:
+#   ECR_REPO_NAME: dreamdeck-ecr
+#   AWS_REGION: eu-west-1
+
+jobs:
+  # check-quality перенесено в ci.yml
+
+  # --- AWS / Terraform (вимкнено) ---
+  # terraform:
+  #   needs: check-quality
+  #   runs-on: ubuntu-latest
+  #
+  #   defaults:
+  #     run:
+  #       working-directory: ./terraform
+  #
+  #   steps:
+  #     - name: Checkout code
+  #       uses: actions/checkout@v6
+  #
+  #     - name: Configure AWS Credentials
+  #       uses: aws-actions/configure-aws-credentials@v4
+  #       with:
+  #         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  #         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+  #         aws-region: ${{ secrets.AWS_REGION }}
+  #
+  #     - name: Setup Terraform
+  #       uses: hashicorp/setup-terraform@v3
+  #       with:
+  #         terraform_version: "1.1.7"
+  #
+  #     - name: Verify Install
+  #       run: |
+  #         echo "AWS CLI Version:"
+  #         aws --version
+  #         echo "Terraform Version:"
+  #         terraform --version
+  #
+  #     - name: Terraform Init
+  #       run: terraform init
+  #
+  #     - name: Terraform Validate
+  #       run: terraform validate
+  #
+  #     - name: Terraform Plan
+  #       run: terraform plan -input=false
+  #
+  #     - name: Terraform Apply
+  #       run: terraform apply -auto-approve -input=false
+
+  # --- ECR build & push (вимкнено) ---
+  # build-and-push:
+  #   needs: terraform
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Checkout code
+  #       uses: actions/checkout@v6
+  #
+  #     - name: Configure AWS Credentials
+  #       uses: aws-actions/configure-aws-credentials@v6
+  #       with:
+  #         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  #         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+  #         aws-region: ${{ secrets.AWS_REGION }}
+  #
+  #     - name: Login to Amazon ECR
+  #       id: login-ecr
+  #       uses: aws-actions/amazon-ecr-login@v2
+  #
+  #     - name: Get current date
+  #       id: date
+  #       run: echo "date=$(date +'%Y-%m-%d-%H-%M')" >> $GITHUB_OUTPUT
+  #
+  #     - name: Build & Push Backend
+  #       env:
+  #         ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+  #         IMAGE_TAG: ${{ steps.date.outputs.date }}
+  #       run: |
+  #         cd backend
+  #         docker build -t $ECR_REGISTRY/${{ env.ECR_REPO_NAME }}:backend-$IMAGE_TAG .
+  #         docker tag $ECR_REGISTRY/${{ env.ECR_REPO_NAME }}:backend-$IMAGE_TAG $ECR_REGISTRY/${{ env.ECR_REPO_NAME }}:backend-latest
+  #         docker push $ECR_REGISTRY/${{ env.ECR_REPO_NAME }}:backend-$IMAGE_TAG
+  #         docker push $ECR_REGISTRY/${{ env.ECR_REPO_NAME }}:backend-latest
+  #
+  #     - name: Build & Push Frontend
+  #       env:
+  #         ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+  #         IMAGE_TAG: ${{ steps.date.outputs.date }}
+  #       run: |
+  #         cd frontend
+  #         docker build -t $ECR_REGISTRY/${{ env.ECR_REPO_NAME }}:frontend-$IMAGE_TAG .
+  #         docker tag $ECR_REGISTRY/${{ env.ECR_REPO_NAME }}:frontend-$IMAGE_TAG $ECR_REGISTRY/${{ env.ECR_REPO_NAME }}:frontend-latest
+  #         docker push $ECR_REGISTRY/${{ env.ECR_REPO_NAME }}:frontend-$IMAGE_TAG
+  #         docker push $ECR_REGISTRY/${{ env.ECR_REPO_NAME }}:frontend-latest
+
+  # --- EC2 deploy (вимкнено) ---
+  # deploy:
+  #   needs: [build-and-push, check-quality]
+  #   runs-on: ubuntu-latest
+  #
+  #   steps:
+  #     - name: Checkout code
+  #       uses: actions/checkout@v6
+  #
+  #     - name: Connect to EC2 and Run Script
+  #       uses: appleboy/ssh-action@v1.0.3
+  #       with:
+  #         host: ${{ secrets.EC2_HOST }}
+  #         username: ${{ secrets.EC2_USER }}
+  #         key: ${{ secrets.EC2_SSH_KEY }}
+  #         port: 22
+  #         script: |
+  #           cd ~/habit-tracker-dreamdeck-demo
+  #           chmod +x rerun.sh
+  #           ./rerun.sh
+
+  placeholder:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy disabled
+        run: echo "AWS deploy is disabled. Use ci.yml for tests and linters on push to main."
